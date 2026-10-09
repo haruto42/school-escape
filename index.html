@@ -60,6 +60,71 @@
             pointer-events: none;
         }
 
+        canvas.shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%   { transform: translate(0, 0); }
+            10%  { transform: translate(-10px, 5px); }
+            20%  { transform: translate(9px, -6px); }
+            30%  { transform: translate(-8px, -4px); }
+            40%  { transform: translate(8px, 6px); }
+            50%  { transform: translate(-6px, 3px); }
+            60%  { transform: translate(6px, -3px); }
+            70%  { transform: translate(-4px, 2px); }
+            80%  { transform: translate(3px, -2px); }
+            90%  { transform: translate(-2px, 1px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        #gameOver {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            background: #000000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.2s;
+        }
+
+        #gameOver.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #gameOverText {
+            color: #cc2222;
+            font-size: min(10vw, 56px);
+            letter-spacing: 0.1em;
+        }
+
+        #gameOverReason {
+            max-width: 90vw;
+            color: #ffffff;
+            font-size: min(4.5vw, 22px);
+            text-align: center;
+        }
+
+        #againButton {
+            padding: 10px 36px;
+            border: 3px solid #ffffff;
+            background: #000000;
+            color: #ffffff;
+            font-size: min(6vw, 28px);
+            cursor: pointer;
+        }
+
+        #againButton:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+
         #stickKnob {
             width: 50px;
             height: 50px;
@@ -70,6 +135,11 @@
 <body>
     <canvas id="canvas"></canvas>
     <div id="message" hidden></div>
+    <div id="gameOver">
+        <div id="gameOverText">GAME OVER</div>
+        <div id="gameOverReason"></div>
+        <button id="againButton" disabled>again</button>
+    </div>
     <div id="stickBase" class="stick" hidden></div>
     <div id="stickKnob" class="stick" hidden></div>
 
@@ -102,7 +172,11 @@
             h:"#8c8c8c",//階段(中段)
             i:"#555555",//階段(下段)
             j:"#7ac74f",//草
-            k:"#5aa03a"//草の濃い点
+            k:"#5aa03a",//草の濃い点
+            l:"#1c2a6b",//スーツ
+            m:"#1f3fbf",//ネクタイ
+            n:"#4a3322",//髪
+            o:"#3a2a1e"//ひげ
         };
 
         // 色番号の "." は透明
@@ -545,8 +619,8 @@
                 "0,47":{message:"教室に戻った。",sound:"open",toMap:1,x:192,y:256},
                 "0,22":{message:"ドアには鍵がかかっている……",sound:"locked"},
                 "0,9":{message:"ドアには鍵がかかっている……",sound:"locked"},
-                "6,30":{message:"階段を降りた。(2階)",toMap:3,x:64,y:448},
-                "6,29":{message:"階段を降りた。(2階)",toMap:3,x:64,y:448},
+                "6,30":{message:"階段を降りた。(2階)",toMap:3,x:64,y:448,show:"teacher"},
+                "6,29":{message:"階段を降りた。(2階)",toMap:3,x:64,y:448,show:"teacher"},
                 "6,5":{message:"階段を降りた。(2階)",toMap:3,x:64,y:48},
                 "6,4":{message:"階段を降りた。(2階)",toMap:3,x:64,y:48}
             },
@@ -563,12 +637,12 @@
                 "0,22":{message:"ドアには鍵がかかっている……",sound:"locked"},
                 "0,9":{message:"ドアには鍵がかかっている……",sound:"locked"},
                 "3,49":{message:"ドアには鍵がかかっている……",sound:"locked"},
-                "6,30":{message:"階段を降りた。(1階)",toMap:4,x:112,y:448},
-                "6,29":{message:"階段を降りた。(1階)",toMap:4,x:112,y:448},
+                "6,30":{message:"階段を降りた。(1階)",toMap:4,x:112,y:448,show:"teacher"},
+                "6,29":{message:"階段を降りた。(1階)",toMap:4,x:112,y:448,show:"teacher"},
                 "6,5":{message:"階段を降りた。(1階)",toMap:4,x:112,y:48},
                 "6,4":{message:"階段を降りた。(1階)",toMap:4,x:112,y:48},
-                "6,27":{message:"階段を上がった。(3階)",toMap:2,x:64,y:448},
-                "6,26":{message:"階段を上がった。(3階)",toMap:2,x:64,y:448},
+                "6,27":{message:"階段を上がった。(3階)",toMap:2,x:64,y:448,show:"teacher"},
+                "6,26":{message:"階段を上がった。(3階)",toMap:2,x:64,y:448,show:"teacher"},
                 "6,2":{message:"階段を上がった。(3階)",toMap:2,x:64,y:48},
                 "6,1":{message:"階段を上がった。(3階)",toMap:2,x:64,y:48}
             },
@@ -585,8 +659,8 @@
                 "3,40":{message:"ドアには鍵がかかっている……",sound:"locked"},
                 "3,47":{message:"ドアには鍵がかかっている……",sound:"locked"},
                 "6,49":{message:"ドアには鍵がかかっている……",sound:"locked"},
-                "9,27":{message:"階段を上がった。(2階)",toMap:3,x:64,y:448},
-                "9,26":{message:"階段を上がった。(2階)",toMap:3,x:64,y:448},
+                "9,27":{message:"階段を上がった。(2階)",toMap:3,x:64,y:448,show:"teacher"},
+                "9,26":{message:"階段を上がった。(2階)",toMap:3,x:64,y:448,show:"teacher"},
                 "9,2":{message:"階段を上がった。(2階)",toMap:3,x:64,y:48},
                 "9,1":{message:"階段を上がった。(2階)",toMap:3,x:64,y:48},
                 "13,38":{message:"外に出た。",sound:"open",toMap:5,x:96,y:32},
@@ -624,8 +698,53 @@
             ]
         };
 
+        const teacherTex = [//teacher
+            "................",
+            "....nnnnnnnn....",
+            "...nnnnnnnnnn...",
+            "...nn444444nn...",
+            "...n44444444n...",
+            "...n44144144n...",
+            "...n44444444n...",
+            "...n4oooooo4n...",
+            ".....44oo44.....",
+            "...lll0mm0lll...",
+            "..lllllmmlllll..",
+            "..lllllmmlllll..",
+            "..lllllmmlllll..",
+            "..44lllmmlll44..",
+            "....llll..llll..",
+            "....1111..1111.."
+        ];
+
+        // 先生は中央階段を使うと、着地した場所のすぐ隣に現れて捕まえる
+        const makeTeacher = (x,y) => ({
+            id:"teacher",
+            visible:false,
+            catches:true,
+            reason:"１年生なのに中央階段を使ってしまった",
+            x:x,
+            y:y,
+            w:16,
+            h:16,
+            tex:teacherTex
+        });
+
+        // 動かない人物。マップIDごとに並べる(visibleがtrueの間だけ表示され、通れない)
+        const npcs = {
+            2:[makeTeacher(48,448)],
+            3:[makeTeacher(48,448)],
+            4:[makeTeacher(96,448)]
+        };
+
         const gameData = {
-            mapId:1
+            mapId:1,
+            over:false
+        };
+
+        const startState = {
+            x:player.x,
+            y:player.y
         };
 
         const camera = {
@@ -663,6 +782,11 @@
             tileTextures[id] = makeTexture(tileData[id]);
         };
         player.texture = makeTexture(player.tex);
+        for (const mapId in npcs) {
+            npcs[mapId].forEach((npc) => {
+                npc.texture = makeTexture(npc.tex);
+            });
+        };
 
         // マップ外は壁として扱う
         const getTile = (tx,ty) => {
@@ -756,7 +880,7 @@
                 };
             },
 
-            tone(type,startFreq,endFreq,delay,duration) {
+            tone(type,startFreq,endFreq,delay,duration,volume = this.volume) {
                 if (!this.ctx) {
                     return;
                 };
@@ -767,7 +891,7 @@
                 osc.type = type;
                 osc.frequency.setValueAtTime(startFreq,start);
                 osc.frequency.exponentialRampToValueAtTime(endFreq,start + duration);
-                gain.gain.setValueAtTime(this.volume,start);
+                gain.gain.setValueAtTime(volume,start);
                 gain.gain.exponentialRampToValueAtTime(0.001,start + duration);
 
                 osc.connect(gain);
@@ -789,6 +913,26 @@
                 this.lastLocked = now;
                 this.tone("square",320,180,0,0.06);
                 this.tone("square",320,180,0.1,0.06);
+            },
+
+            // 捕まった瞬間: 鋭く下がる不協和音
+            caught() {
+                this.tone("sawtooth",900,120,0,0.35,0.6);
+                this.tone("square",450,60,0,0.35,0.4);
+            },
+
+            // ゲームオーバー表示: 下がっていく4音
+            gameOver() {
+                this.tone("triangle",523,523,0,0.25);
+                this.tone("triangle",440,440,0.3,0.25);
+                this.tone("triangle",370,370,0.6,0.25);
+                this.tone("triangle",294,294,0.9,0.7);
+            },
+
+            // againを押した: 上がる2音
+            again() {
+                this.tone("square",400,800,0,0.08,0.7);
+                this.tone("triangle",800,1200,0.08,0.12);
             },
 
             open() {
@@ -825,6 +969,11 @@
             };
             if (data.sound) {
                 sound[data.sound]();
+            };
+            if (data.show) {
+                Object.values(npcs).flat().filter((npc) => npc.id === data.show).forEach((npc) => {
+                    npc.visible = true;
+                });
             };
             if (data.toMap) {
                 gameData.mapId = data.toMap;
@@ -922,7 +1071,7 @@
         };
 
         document.addEventListener("pointerdown",(event) => {
-            if (stick.id !== null || event.clientY < window.innerHeight/2) {
+            if (gameData.over || stick.id !== null || event.clientY < window.innerHeight/2) {
                 return;
             };
             stick.id = event.pointerId;
@@ -950,12 +1099,19 @@
         });
 
         // 1ピクセルずつ進めて壁に当たったら止める(フレームが飛んでも壁を抜けない)
+        const visibleNpcs = () => (npcs[gameData.mapId] || []).filter((npc) => npc.visible);
+
+        const collidesWithNpc = (entity) => visibleNpcs().some((npc) =>
+            entity.x < npc.x + npc.w && entity.x + entity.w > npc.x
+            && entity.y < npc.y + npc.h && entity.y + entity.h > npc.y
+        );
+
         const movePlayer = (dx,dy,steps) => {
             for (let i = 0; i < steps; i++) {
                 player.x += dx;
                 player.y += dy;
                 const tiles = getBlockingTiles(player);
-                if (tiles.length > 0) {
+                if (tiles.length > 0 || collidesWithNpc(player)) {
                     player.x -= dx;
                     player.y -= dy;
                     return tiles;
@@ -963,6 +1119,54 @@
             };
             return [];
         };
+
+        // 暗転 → GAME OVER → againで最初から
+        const gameOverScreen = document.getElementById("gameOver");
+        const againButton = document.getElementById("againButton");
+
+        const isNear = (a,b,margin) => a.x < b.x + b.w + margin && a.x + a.w + margin > b.x
+            && a.y < b.y + b.h + margin && a.y + a.h + margin > b.y;
+
+        const gameOverReason = document.getElementById("gameOverReason");
+
+        const startGameOver = (reason) => {
+            gameData.over = true;
+            gameOverReason.textContent = reason;
+            key.up = key.down = key.left = key.right = false;
+            releaseStick();
+            messageBox.hidden = true;
+            sound.caught();
+
+            // 捕まった瞬間に操作を止め、画面を揺らしてから暗転する
+            canvas.classList.add("shake");
+            setTimeout(() => {
+                canvas.classList.remove("shake");
+                gameOverScreen.classList.add("show");
+                sound.gameOver();
+
+                // 暗転しきってから押せるようにする
+                setTimeout(() => {
+                    againButton.disabled = false;
+                    againButton.focus();
+                },1200);
+            },500);
+        };
+
+        const restart = () => {
+            sound.again();
+            gameData.mapId = 1;
+            player.x = startState.x;
+            player.y = startState.y;
+            Object.values(npcs).flat().forEach((npc) => {
+                npc.visible = false;
+            });
+            moveRemain = 0;
+            againButton.disabled = true;
+            gameOverScreen.classList.remove("show");
+            gameData.over = false;
+        };
+
+        againButton.addEventListener("click",restart);
 
         let lastTime = null;
         let moveRemain = 0;
@@ -974,38 +1178,46 @@
             const delta = lastTime === null ? 0 : Math.min((time - lastTime)/1000,0.05);
             lastTime = time;
 
-            moveRemain += player.speed*delta;
-            const steps = Math.floor(moveRemain);
-            moveRemain -= steps;
+            if (!gameData.over) {
+                moveRemain += player.speed*delta;
+                const steps = Math.floor(moveRemain);
+                moveRemain -= steps;
 
-            const beforeX = player.x;
-            const beforeY = player.y;
-            let touched = [];
-            if (key.up) {
-                touched = movePlayer(0,-1,steps);
-            } else if (key.down) {
-                touched = movePlayer(0,1,steps);
-            } else if (key.right) {
-                touched = movePlayer(1,0,steps);
-            } else if (key.left) {
-                touched = movePlayer(-1,0,steps);
-            };
-            // 一定距離ごとに足音を鳴らす
-            const moved = Math.abs(player.x - beforeX) + Math.abs(player.y - beforeY);
-            if (moved > 0) {
-                stepDistance += moved;
-                if (stepDistance >= 48) {
-                    stepDistance = 0;
-                    sound.step();
+                const beforeX = player.x;
+                const beforeY = player.y;
+                let touched = [];
+                if (key.up) {
+                    touched = movePlayer(0,-1,steps);
+                } else if (key.down) {
+                    touched = movePlayer(0,1,steps);
+                } else if (key.right) {
+                    touched = movePlayer(1,0,steps);
+                } else if (key.left) {
+                    touched = movePlayer(-1,0,steps);
                 };
-            } else {
-                stepDistance = 40;
-            };
+                // 一定距離ごとに足音を鳴らす
+                const moved = Math.abs(player.x - beforeX) + Math.abs(player.y - beforeY);
+                if (moved > 0) {
+                    stepDistance += moved;
+                    if (stepDistance >= 48) {
+                        stepDistance = 0;
+                        sound.step();
+                    };
+                } else {
+                    stepDistance = 40;
+                };
 
-            touchDoor(touched);
+                touchDoor(touched);
+
+                const catcher = visibleNpcs().find((npc) => npc.catches && isNear(player,npc,2));
+                if (catcher) {
+                    startGameOver(catcher.reason);
+                };
+            };
 
             updateCamera();
             drawMap(gameData.mapId);
+            visibleNpcs().forEach(drawEntity);
             drawEntity(player);
 
             requestAnimationFrame(gameLoop);
