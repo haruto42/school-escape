@@ -97,7 +97,12 @@
             b:"#c68642",//机の天板
             c:"#1f5c3a",//黒板
             e:"#8b5a2b",//黒板の枠
-            f:"#8fd0f5"//窓ガラス
+            f:"#8fd0f5",//窓ガラス
+            g:"#c8c8c8",//階段(上段)
+            h:"#8c8c8c",//階段(中段)
+            i:"#555555",//階段(下段)
+            j:"#7ac74f",//草
+            k:"#5aa03a"//草の濃い点
         };
 
         // 色番号の "." は透明
@@ -229,11 +234,104 @@
                 "1aaaaaaaaaaaaaa1",
                 "1111111111111111",
                 "1111111111111111"
+            ],
+            7:[//stairs(down)
+                "1111111111111111",
+                "ggg1hhh1iii11111",
+                "ggg1hhh1iii11111",
+                "ggg1hhh1iii11111",
+                "ggg1hhh1iii11111",
+                "ggg1hhh1iii11111",
+                "ggg1hhh1iii11111",
+                "ggg1hhh1iii11111",
+                "ggg1hhh1iii11111",
+                "ggg1hhh1iii11111",
+                "ggg1hhh1iii11111",
+                "ggg1hhh1iii11111",
+                "ggg1hhh1iii11111",
+                "ggg1hhh1iii11111",
+                "ggg1hhh1iii11111",
+                "1111111111111111"
+            ],
+            8:[//stairs(up)
+                "1111111111111111",
+                "11111iii1hhh1ggg",
+                "11111iii1hhh1ggg",
+                "11111iii1hhh1ggg",
+                "11111iii1hhh1ggg",
+                "11111iii1hhh1ggg",
+                "11111iii1hhh1ggg",
+                "11111iii1hhh1ggg",
+                "11111iii1hhh1ggg",
+                "11111iii1hhh1ggg",
+                "11111iii1hhh1ggg",
+                "11111iii1hhh1ggg",
+                "11111iii1hhh1ggg",
+                "11111iii1hhh1ggg",
+                "11111iii1hhh1ggg",
+                "1111111111111111"
+            ],
+            9:[//sign
+                "1111111111111111",
+                "1aaaaaaaaaaaaaa1",
+                "1aaaaaaaaaaaaaa1",
+                "1a111111111111a1",
+                "1a1bbbbbbbbbb1a1",
+                "1a1b00000000b1a1",
+                "1a1bbbbbbbbbb1a1",
+                "1a1b00000000b1a1",
+                "1a1bbbbbbbbbb1a1",
+                "1a1b000000bbb1a1",
+                "1a1bbbbbbbbbb1a1",
+                "1a111111111111a1",
+                "1aaaaaaaaaaaaaa1",
+                "1aaaaaaaaaaaaaa1",
+                "1aaaaaaaaaaaaaa1",
+                "1111111111111111"
+            ],
+            10:[//shoe locker(マップ上の文字は a)
+                "1111111111111111",
+                "1bbbbbbbbbbbbbb1",
+                "1b11111bb11111b1",
+                "1b11111bb11111b1",
+                "1b11111bb11111b1",
+                "1bbbbbbbbbbbbbb1",
+                "1b11111bb11111b1",
+                "1b11111bb11111b1",
+                "1b11111bb11111b1",
+                "1bbbbbbbbbbbbbb1",
+                "1b11111bb11111b1",
+                "1b11111bb11111b1",
+                "1b11111bb11111b1",
+                "1bbbbbbbbbbbbbb1",
+                "1bbbbbbbbbbbbbb1",
+                "1111111111111111"
+            ],
+            11:[//grass(マップ上の文字は b)
+                "jjjjjjjjjjjjjjjj",
+                "jjjjjjkjjjjjjjjj",
+                "jjjjjjjjjjjjjjjj",
+                "jjjjjjjkjjjjjjjj",
+                "jjjjjjjjjjjjjjjj",
+                "jjjjjjjjkjjjjjjj",
+                "jjjjjjjjjjjjjjjj",
+                "jjjjjjjjjkjjjjjj",
+                "jjjjjjjjjjjjjjjj",
+                "jjjjjjjjjjkjjjjj",
+                "jjjjjjjjjjjjjjjj",
+                "kjjjjjjjjjjkjjjj",
+                "jjjjjjjjjjjjjjjj",
+                "jkjjjjjjjjjjkjjj",
+                "jjjjjjjjjjjjjjjj",
+                "jjkjjjjjjjjjjkjj"
             ]
         };
 
         // 通れないタイル(floor以外)
-        const solidTiles = new Set([1,2,3,4,5,6]);
+        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10]);
+
+        // 触れると反応するタイル(ドア・階段)
+        const touchTiles = new Set([5,7,8,9]);
 
         // 1行=1文字1タイルの文字列。縦横のサイズはマップごとに自由
         const mapData = {
@@ -258,24 +356,43 @@
                 "10000444400001",
                 "11111111111111"
             ],
-            2:[//hallway(ドアの高さは教室と同じ)
+            2:[//hallway(左の壁にドア、右の壁に下り階段。教室1の前ドアから上へ並ぶ)
                 "1111111",
                 "1000001",
                 "1000001",
+                "1000009",
+                "1000007",
+                "1000007",
+                "1000001",
+                "1000001",
+                "1000001",
+                "5000001",
+                "9000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "9000001",
                 "5000001",
                 "1000001",
                 "1000001",
                 "1000001",
                 "1000001",
                 "1000001",
-                "1000001",
-                "1000001",
-                "1000001",
-                "1000001",
+                "1000009",
+                "1000007",
+                "1000007",
                 "1000001",
                 "1000001",
                 "1000001",
                 "5000001",
+                "9000001",
                 "1000001",
                 "1000001",
                 "1000001",
@@ -286,6 +403,23 @@
                 "1000001",
                 "1000001",
                 "1000001",
+                "9000001",
+                "5000001",
+                "1000001",
+                "1195111"
+            ],
+            3:[//hallway 2F(3階と同じ構造。右の壁の上り階段が増える)
+                "1111111",
+                "1000008",
+                "1000008",
+                "1000009",
+                "1000007",
+                "1000007",
+                "1000001",
+                "1000001",
+                "1000001",
+                "5000001",
+                "9000001",
                 "1000001",
                 "1000001",
                 "1000001",
@@ -296,21 +430,171 @@
                 "1000001",
                 "1000001",
                 "1000001",
+                "9000001",
+                "5000001",
                 "1000001",
                 "1000001",
-                "1111111"
+                "1000001",
+                "1000008",
+                "1000008",
+                "1000009",
+                "1000007",
+                "1000007",
+                "1000001",
+                "1000001",
+                "1000001",
+                "5000001",
+                "9000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "1000001",
+                "9000001",
+                "5000001",
+                "1000001",
+                "1195111"
+            ],
+            4:[//hallway 1F(幅14: 左に下駄箱の張り出し、右に出入口)
+                "22211111112222",
+                "22210000082222",
+                "22210000082222",
+                "22210000092222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22250000012222",
+                "22290000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22290000012222",
+                "22250000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000082222",
+                "22210000082222",
+                "22210000092222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "aaaa0000012222",
+                "00000000012222",
+                "00000000012222",
+                "00000000011111",
+                "00000000000005",
+                "aaaa0000000005",
+                "22250000011111",
+                "22290000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22210000012222",
+                "22290000012222",
+                "22250000012222",
+                "22210000012222",
+                "22211951112222"
+            ],
+            5:[//outside(校庭)
+                "11111155111111",
+                "2bbbbbbbbbbbb2",
+                "2bbbbbbbbbbbb2",
+                "2bbbbbbbbbbbb2",
+                "2bbbbbbbbbbbb2",
+                "2bbbbbbbbbbbb2",
+                "2bbbbbbbbbbbb2",
+                "2bbbbbbbbbbbb2",
+                "2bbbbbbbbbbbb2",
+                "22222222222222"
             ]
         };
 
         // ドアに触れたときの動作。キーは「マップID」→「x,y」(タイル座標)
         const doorData = {
             1:{
-                "13,3":{message:"ドアには鍵がかかっている……"},
-                "13,16":{message:"鍵を開けて、外に出た。",toMap:2,x:16,y:256}
+                "13,3":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "13,16":{message:"鍵を開けて、外に出た。",sound:"open",toMap:2,x:16,y:752}
             },
             2:{
-                "0,3":{message:"ドアには鍵がかかっている……"},
-                "0,16":{message:"教室に戻った。",toMap:1,x:192,y:256}
+                "3,49":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "6,28":{message:"3階"},
+                "6,3":{message:"3階"},
+                "2,49":{message:"理科室"},
+                "0,10":{message:"1-1"},//教室名の看板(文字は未設定)
+                "0,21":{message:"1-1"},
+                "0,35":{message:"1-2"},
+                "0,46":{message:"1-2"},
+                "0,34":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "0,47":{message:"教室に戻った。",sound:"open",toMap:1,x:192,y:256},
+                "0,22":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "0,9":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "6,30":{message:"階段を降りた。(2階)",toMap:3,x:64,y:448},
+                "6,29":{message:"階段を降りた。(2階)",toMap:3,x:64,y:448},
+                "6,5":{message:"階段を降りた。(2階)",toMap:3,x:64,y:48},
+                "6,4":{message:"階段を降りた。(2階)",toMap:3,x:64,y:48}
+            },
+            3:{//2階: どのドアも開かない
+                "6,28":{message:"2階"},
+                "6,3":{message:"2階"},
+                "2,49":{message:"音楽室"},
+                "0,10":{message:"2-1"},//教室名の看板(文字は未設定)
+                "0,21":{message:"2-1"},
+                "0,35":{message:"2-2"},
+                "0,46":{message:"2-2"},
+                "0,34":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "0,47":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "0,22":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "0,9":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "3,49":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "6,30":{message:"階段を降りた。(1階)",toMap:4,x:112,y:448},
+                "6,29":{message:"階段を降りた。(1階)",toMap:4,x:112,y:448},
+                "6,5":{message:"階段を降りた。(1階)",toMap:4,x:112,y:48},
+                "6,4":{message:"階段を降りた。(1階)",toMap:4,x:112,y:48},
+                "6,27":{message:"階段を上がった。(3階)",toMap:2,x:64,y:448},
+                "6,26":{message:"階段を上がった。(3階)",toMap:2,x:64,y:448},
+                "6,2":{message:"階段を上がった。(3階)",toMap:2,x:64,y:48},
+                "6,1":{message:"階段を上がった。(3階)",toMap:2,x:64,y:48}
+            },
+            4:{//1階
+                "3,10":{message:"ランチルーム"},
+                "3,21":{message:"ランチルーム"},
+                "3,41":{message:"空き教室"},
+                "3,46":{message:"空き教室"},
+                "5,49":{message:"図書室"},
+                "9,28":{message:"1階"},
+                "9,3":{message:"1階"},
+                "3,9":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "3,22":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "3,40":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "3,47":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "6,49":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "9,27":{message:"階段を上がった。(2階)",toMap:3,x:64,y:448},
+                "9,26":{message:"階段を上がった。(2階)",toMap:3,x:64,y:448},
+                "9,2":{message:"階段を上がった。(2階)",toMap:3,x:64,y:48},
+                "9,1":{message:"階段を上がった。(2階)",toMap:3,x:64,y:48},
+                "13,38":{message:"外に出た。",sound:"open",toMap:5,x:96,y:32},
+                "13,39":{message:"外に出た。",sound:"open",toMap:5,x:96,y:32}
+            },
+            5:{//校庭
+                "6,0":{message:"校舎に戻った。",sound:"open",toMap:4,x:192,y:608},
+                "7,0":{message:"校舎に戻った。",sound:"open",toMap:4,x:192,y:608}
             }
         };
 
@@ -386,7 +670,7 @@
             if (row === undefined || tx < 0 || tx >= row.length) {
                 return 1;
             };
-            return Number(row[tx]);
+            return parseInt(row[tx],36);
         };
 
         const updateCamera = () => {
@@ -416,7 +700,7 @@
             for (let ty = startY; ty < endY && ty < map.length; ty++) {
                 for (let tx = startX; tx < endX && tx < map[ty].length; tx++) {
                     ctx.drawImage(
-                        tileTextures[map[ty][tx]],
+                        tileTextures[parseInt(map[ty][tx],36)],
                         tx*size - camera.x,
                         ty*size - camera.y
                     );
@@ -530,17 +814,19 @@
         };
 
         const touchDoor = (tiles) => {
-            const door = tiles.find((tile) => tile.id === 5);
+            const door = tiles.find((tile) => touchTiles.has(tile.id));
             const data = door && (doorData[gameData.mapId] || {})[door.x + "," + door.y];
             if (!data) {
                 return;
             };
 
-            showMessage(data.message);
-            if (!data.toMap) {
-                sound.locked();
-            } else {
-                sound.open();
+            if (data.message) {
+                showMessage(data.message);
+            };
+            if (data.sound) {
+                sound[data.sound]();
+            };
+            if (data.toMap) {
                 gameData.mapId = data.toMap;
                 player.x = data.x;
                 player.y = data.y;
