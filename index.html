@@ -177,8 +177,14 @@
             m:"#1f3fbf",//ネクタイ
             n:"#4a3322",//髪
             o:"#3a2a1e",//ひげ
-            p:"#c4c4c4",//舗装
-            q:"#9c9c9c"//舗装の目地
+            u:"#cfcfcf",//コンクリート
+            v:"#a9a9a9",//コンクリートの継ぎ目
+            w:"#c2c2c2",//コンクリートのざらつき
+            x:"#aaaaaa",//濃いコンクリート
+            y:"#8a8a8a",//濃いコンクリートの継ぎ目
+            z:"#9b9b9b",//濃いコンクリートのざらつき
+            s:"#f0ead6",//ミルク庫の壁
+            t:"#3a6fb0"//青(ミルク庫)
         };
 
         // 色番号の "." は透明
@@ -401,28 +407,64 @@
                 "jjjjjjjjjjjjjjjj",
                 "jjkjjjjjjjjjjkjj"
             ],
-            12:[//paving(マップ上の文字は c)
-                "qqqqqqqqqqqqqqqq",
-                "qpppppppqppppppp",
-                "qpppppppqppppppp",
-                "qpppppppqppppppp",
-                "qpppppppqppppppp",
-                "qpppppppqppppppp",
-                "qpppppppqppppppp",
-                "qpppppppqppppppp",
-                "qqqqqqqqqqqqqqqq",
-                "ppppqpppppppqppp",
-                "ppppqpppppppqppp",
-                "ppppqpppppppqppp",
-                "ppppqpppppppqppp",
-                "ppppqpppppppqppp",
-                "ppppqpppppppqppp",
-                "ppppqpppppppqppp"
+            12:[//concrete(コンクリート。マップ上の文字は c)
+                "vvvvvvvvvvvvvvvv",
+                "vuuuuuuuuuuuuuuu",
+                "vuuuuuuuuuuuuuuu",
+                "vuwuuuuuuuuuuuuu",
+                "vuuuuuwuuuuuwuuu",
+                "vwuwuuwuuuuuuuuu",
+                "vuuuuuuuuuuwuuuu",
+                "vuuuuuuwuuuuuuuu",
+                "vuuuwuuuuuuuuuuu",
+                "vuuuuuuuuuwuuuuu",
+                "vuuuwuuuuuuuuuuu",
+                "vuuuuuuuuuuuwuuu",
+                "vuuuuuuuuuuuuuuu",
+                "vuuuuuuuuuuuuuuu",
+                "vuuuuwuuuuuwuuuu",
+                "vuuuuuuuuuuwuwuu"
+            ],
+            13:[//dark concrete(濃いコンクリート。旧マップ切れの場所。マップ上の文字は d)
+                "yyyyyyyyyyyyyyyy",
+                "yzxzxxxxxxxxxxxx",
+                "yzxxxxxxxxxxzxxx",
+                "yxxxxxxxxxzzxxxx",
+                "yxxxxxxxxxxxzxxx",
+                "yxxxxxxxxxxxxxxx",
+                "yxxxxxxxxxxxxxxx",
+                "yxxxxxxzxxxzzxxx",
+                "yxxzxxxxxxxxxxxx",
+                "yxxxxxxxxxzxxxxx",
+                "yxxxxxxxxzxxxxxx",
+                "yxxzxxxxxxzxxxxx",
+                "yxxxxxxxxxxxxxxx",
+                "yxxxxxzxxxxxxxxx",
+                "yxxxxxxxxxxxxzxx",
+                "yxxxxxxxxxxxxxxx"
+            ],
+            14:[//milk storage(ミルク庫。マップ上の文字は e)
+                "1111111111111111",
+                "1tttttttttttttt1",
+                "1tttttttttttttt1",
+                "1tttttttttttttt1",
+                "1ssssssssssssss1",
+                "1sssss1111sssss1",
+                "1ssss111111ssss1",
+                "1ssss100001ssss1",
+                "1ssss100001ssss1",
+                "1ssss1tttt1ssss1",
+                "1ssss1tttt1ssss1",
+                "1ssss100001ssss1",
+                "1ssss100001ssss1",
+                "1ssss111111ssss1",
+                "1ssssssssssssss1",
+                "1111111111111111"
             ]
         };
 
         // 通れないタイル(floor以外)
-        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10]);
+        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14]);
 
         // 触れると反応するタイル(ドア・階段)
         const touchTiles = new Set([5,7,8,9]);
@@ -618,11 +660,29 @@
                 "2bbbbbbbbbbbb2",
                 "22222222222222"
             ],
-            6:[//walkway(渡り廊下。奥は次の校舎につなぐ予定)
-                "1111111111",
-                "5cccccccc1",
-                "5cccccccc1",
-                "1111111111"
+            6:[//walkway(渡り廊下。上=ミルク庫2、東は南へ広がり、右端に3年校舎のドア。床はコンクリート。旧マップ切れの場所は濃いコンクリート)
+                "11111111dddee11111",
+                "5cccccccccccccccc1",
+                "5cccccccccccccccc1",
+                "111cc111dddddcccc5",
+                "221cc1222222dcccc5",
+                "221cc1222222dddddd",
+                "221cc1222222222222",
+                "221cc1222222222222",
+                "221cc1222222222222",
+                "221cc1222222222222",
+                "221cc1222222222222",
+                "221cc1222222222222",
+                "221cc1222222222222",
+                "221111222222222222"
+            ],
+            7:[//3年校舎の下駄箱(仮)
+                "111111111",
+                "100aaaaa1",
+                "100000001",
+                "500000001",
+                "500000001",
+                "111111111"
             ]
         };
 
@@ -701,7 +761,13 @@
             },
             6:{//渡り廊下
                 "0,1":{message:"校舎に戻った。",sound:"open",toMap:4,x:256,y:464},
-                "0,2":{message:"校舎に戻った。",sound:"open",toMap:4,x:256,y:464}
+                "0,2":{message:"校舎に戻った。",sound:"open",toMap:4,x:256,y:464},
+                "17,3":{message:"3年校舎に入った。",sound:"open",toMap:7,x:16,y:48},
+                "17,4":{message:"3年校舎に入った。",sound:"open",toMap:7,x:16,y:48}
+            },
+            7:{//3年校舎の下駄箱(仮)
+                "0,3":{message:"渡り廊下に戻った。",sound:"open",toMap:6,x:256,y:48},
+                "0,4":{message:"渡り廊下に戻った。",sound:"open",toMap:6,x:256,y:48}
             }
         };
 
