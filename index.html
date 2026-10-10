@@ -177,6 +177,8 @@
             m:"#1f3fbf",//ネクタイ
             n:"#4a3322",//髪
             o:"#3a2a1e",//ひげ
+            p:"#c4c4c4",//石畳
+            q:"#9c9c9c",//石畳の目地
             u:"#cfcfcf",//コンクリート
             v:"#a9a9a9",//コンクリートの継ぎ目
             w:"#c2c2c2",//コンクリートのざらつき
@@ -460,6 +462,24 @@
                 "1ssss111111ssss1",
                 "1ssssssssssssss1",
                 "1111111111111111"
+            ],
+            15:[//stone paving(石畳。マップ上の文字は f)
+                "qqqqqqqqqqqqqqqq",
+                "qpppppppqppppppp",
+                "qpppppppqppppppp",
+                "qpppppppqppppppp",
+                "qpppppppqppppppp",
+                "qpppppppqppppppp",
+                "qpppppppqppppppp",
+                "qpppppppqppppppp",
+                "qqqqqqqqqqqqqqqq",
+                "ppppqpppppppqppp",
+                "ppppqpppppppqppp",
+                "ppppqpppppppqppp",
+                "ppppqpppppppqppp",
+                "ppppqpppppppqppp",
+                "ppppqpppppppqppp",
+                "ppppqpppppppqppp"
             ]
         };
 
@@ -759,6 +779,18 @@
                 "10000000000005",
                 "10000444400001",
                 "11111111111111"
+            ],
+            9:[//外(石畳)。上の壁に職員玄関のドア3つ、左下の色違いコンクリで渡り廊下へ
+                "11111111555111111111",
+                "2ffffffffffffffffff2",
+                "2ffffffffffffffffff2",
+                "2ffffffffffffffffff2",
+                "2ffffffffffffffffff2",
+                "2ffffffffffffffffff2",
+                "2ffffffffffffffffff2",
+                "2ffffffffffffffffff2",
+                "2dddfffffffffffffff2",
+                "22222222222222222222"
             ]
         };
 
@@ -856,15 +888,44 @@
                 "7,57":{message:"ドアには鍵がかかっている……",sound:"locked"},
                 "7,51":{message:"保健室"},
                 "7,56":{message:"保健室"},
-                "0,43":{message:"ドアには鍵がかかっている……",sound:"locked"},
-                "0,44":{message:"ドアには鍵がかかっている……",sound:"locked"},
-                "0,45":{message:"ドアには鍵がかかっている……",sound:"locked"}
+                "0,43":{message:"外に出た。",sound:"open",toMap:9,x:144,y:16},
+                "0,44":{message:"外に出た。",sound:"open",toMap:9,x:144,y:16},
+                "0,45":{message:"外に出た。",sound:"open",toMap:9,x:144,y:16}
             },
             8:{//職員室
                 "13,3":{message:"廊下に戻った。",sound:"open",toMap:7,x:128,y:224},
                 "13,16":{message:"廊下に戻った。",sound:"open",toMap:7,x:128,y:432}
+            },
+            9:{//外(石畳)
+                "8,0":{message:"職員玄関に入った。",sound:"open",toMap:7,x:16,y:704},
+                "9,0":{message:"職員玄関に入った。",sound:"open",toMap:7,x:16,y:704},
+                "10,0":{message:"職員玄関に入った。",sound:"open",toMap:7,x:16,y:704}
             }
         };
+
+        // 乗ると発動するタイル。キーは「マップID」→「x,y」。中身はdoorDataと同じ
+        const stepData = {
+            6:{},
+            9:{}
+        };
+
+        // 渡り廊下の南側の色違いコンクリ(行3以降)に乗ると外へ
+        mapData[6].forEach((row,y) => {
+            [...row].forEach((c,x) => {
+                if (c === "d" && y >= 3) {
+                    stepData[6][x + "," + y] = {message:"外に出た。",sound:"open",toMap:9,x:32,y:80};
+                };
+            });
+        });
+
+        // 外の左下の色違いコンクリに乗ると渡り廊下へ
+        mapData[9].forEach((row,y) => {
+            [...row].forEach((c,x) => {
+                if (c === "d") {
+                    stepData[9][x + "," + y] = {message:"渡り廊下に戻った。",sound:"open",toMap:6,x:224,y:64};
+                };
+            });
+        });
 
         const player = {
             x:192,
@@ -1154,10 +1215,23 @@
         const touchDoor = (tiles) => {
             const door = tiles.find((tile) => touchTiles.has(tile.id));
             const data = door && (doorData[gameData.mapId] || {})[door.x + "," + door.y];
-            if (!data) {
-                return;
+            if (data) {
+                runAction(data);
             };
+        };
 
+        // 足元(体の中心)のタイルがstepDataにあれば発動する
+        const checkStep = () => {
+            const size = config.tileSize;
+            const tx = Math.floor((player.x + player.w/2)/size);
+            const ty = Math.floor((player.y + player.h/2)/size);
+            const data = (stepData[gameData.mapId] || {})[tx + "," + ty];
+            if (data) {
+                runAction(data);
+            };
+        };
+
+        const runAction = (data) => {
             if (data.message) {
                 showMessage(data.message);
             };
@@ -1363,7 +1437,7 @@
         againButton.addEventListener("click",restart);
 
         // 【一時的・配布前に削除】デバッグ用: F12のコンソールで warp(マップID) と入力すると、そのマップへ移動する
-        // warp(マップID, タイルx, タイルy) で位置も指定できる。ID: 1教室 2三階 3二階 4一階 5校庭 6渡り廊下 7三年下駄箱 8職員室
+        // warp(マップID, タイルx, タイルy) で位置も指定できる。ID: 1教室 2三階 3二階 4一階 5校庭 6渡り廊下 7三年下駄箱 8職員室 9外
         const warpSpots = {
             1:[12,16],
             2:[4,28],
@@ -1372,7 +1446,8 @@
             5:[6,2],
             6:[1,1],
             7:[1,8],
-            8:[12,16]
+            8:[12,16],
+            9:[2,5]
         };
 
         const warp = (mapId,tx,ty) => {
@@ -1434,6 +1509,7 @@
                 };
 
                 touchDoor(touched);
+                checkStep();
 
                 const catcher = visibleNpcs().find((npc) => npc.catches && isNear(player,npc,2));
                 if (catcher) {
