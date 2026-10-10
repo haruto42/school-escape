@@ -480,14 +480,32 @@
                 "ppppqpppppppqppp",
                 "ppppqpppppppqppp",
                 "ppppqpppppppqppp"
+            ],
+            16:[//gate(門。マップ上の文字は g)
+                "qqqq11111111qqqq",
+                "qppp1vvvvvv1pppp",
+                "qppppp1qq1pppppp",
+                "qppppp1qq1pppppp",
+                "qppppp1111pppppp",
+                "qppppp1qq1pppppp",
+                "qppppp1qq1pppppp",
+                "qppppp1qq1pppppp",
+                "qqqqqq1111qqqqqq",
+                "qppppp1qq1pppppp",
+                "qppppp1qq1pppppp",
+                "qppppp1qq1pppppp",
+                "qppppp1111pppppp",
+                "qppppp1qq1pppppp",
+                "qppp1vvvvvv1pppp",
+                "qppp11111111pppp"
             ]
         };
 
         // 通れないタイル(floor以外)
-        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14]);
+        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14,16]);
 
         // 触れると反応するタイル(ドア・階段)
-        const touchTiles = new Set([5,7,8,9]);
+        const touchTiles = new Set([5,7,8,9,16]);
 
         // 1行=1文字1タイルの文字列。縦横のサイズはマップごとに自由
         const mapData = {
@@ -680,7 +698,7 @@
                 "2bbbbbbbbbbbb2",
                 "22222222222222"
             ],
-            6:[//walkway(渡り廊下。上=ミルク庫2、東は南へ広がり、右端に3年校舎のドア。床はコンクリート。旧マップ切れの場所は濃いコンクリート)
+            6:[//walkway(渡り廊下。上=ミルク庫2、東は南へ広がり、右端に3年校舎のドア。床はコンクリート。旧マップ切れの場所は濃いコンクリート))
                 "11111111dddee11111",
                 "5cccccccccccccccc1",
                 "5cccccccccccccccc1",
@@ -696,7 +714,7 @@
                 "221cc1222222222222",
                 "221111222222222222"
             ],
-            7:[//3年校舎(仮)。西の壁: 職員室(行14,27)・応接室(行31,38)・職員玄関(行42-46)・保健室(行50,57。ハーフサイズ)。南端は壁(東校舎は後回し)
+            7:[//3年校舎(仮)。西の壁: 職員室(行14,27)・応接室(行31,38)・職員玄関(行42-46)・保健室(行50,57。ハーフサイズ)。南端の壁に外へ出る扉3つ(c9-11)
                 "22222221111111",
                 "22222221000001",
                 "22222221000001",
@@ -757,7 +775,7 @@
                 "22222225000001",
                 "22222221000001",
                 "22222221000001",
-                "22222221111111"
+                "22222221155511"
             ],
             8:[//職員室(教室と同じ内容。ドアは東の壁の行3と行16)
                 "11111111111111",
@@ -780,17 +798,60 @@
                 "10000444400001",
                 "11111111111111"
             ],
-            9:[//外(石畳)。上の壁に職員玄関のドア3つ、左下の色違いコンクリで渡り廊下へ
-                "11111111555111111111",
-                "2ffffffffffffffffff2",
-                "2ffffffffffffffffff2",
-                "2ffffffffffffffffff2",
-                "2ffffffffffffffffff2",
-                "2ffffffffffffffffff2",
-                "2ffffffffffffffffff2",
-                "2ffffffffffffffffff2",
-                "2dddfffffffffffffff2",
-                "22222222222222222222"
+            9:[//外(石畳)。北に色違いコンクリ(渡り廊下へ)、東の壁(3年校舎)の行39-41に職員玄関のドア3つ。行46-52(c17-18)に南北の渡り廊下(コンクリ幅2・長さ5。北端=3年校舎、南端=東校舎の扉。東の壁(行47-51)を開けて石畳2マス(c19-20)+正門(c21))
+                "2222ddd2222222212222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffcccc12222222",
+                "2fffffffff1cccc52222222",
+                "2fffffffff1cccc52222222",
+                "2fffffffff1cccc52222222",
+                "2ffffffffffcccc12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff12222222",
+                "2ffffffffffffff11551112",
+                "2ffffffffffffffffccffg2",
+                "2ffffffffffffffffccffg2",
+                "2ffffffffffffffffccffg2",
+                "2ffffffffffffffffccffg2",
+                "2ffffffffffffffffccffg2",
+                "22222222222222222551112"
             ]
         };
 
@@ -888,18 +949,30 @@
                 "7,57":{message:"ドアには鍵がかかっている……",sound:"locked"},
                 "7,51":{message:"保健室"},
                 "7,56":{message:"保健室"},
-                "0,43":{message:"外に出た。",sound:"open",toMap:9,x:144,y:16},
-                "0,44":{message:"外に出た。",sound:"open",toMap:9,x:144,y:16},
-                "0,45":{message:"外に出た。",sound:"open",toMap:9,x:144,y:16}
+                "0,43":{message:"外に出た。",sound:"open",toMap:9,x:224,y:640},
+                "0,44":{message:"外に出た。",sound:"open",toMap:9,x:224,y:640},
+                "0,45":{message:"外に出た。",sound:"open",toMap:9,x:224,y:640},
+                "9,60":{message:"外に出た。",sound:"open",toMap:9,x:272,y:752},
+                "10,60":{message:"外に出た。",sound:"open",toMap:9,x:272,y:752},
+                "11,60":{message:"外に出た。",sound:"open",toMap:9,x:272,y:752}
             },
             8:{//職員室
                 "13,3":{message:"廊下に戻った。",sound:"open",toMap:7,x:128,y:224},
                 "13,16":{message:"廊下に戻った。",sound:"open",toMap:7,x:128,y:432}
             },
             9:{//外(石畳)
-                "8,0":{message:"職員玄関に入った。",sound:"open",toMap:7,x:16,y:704},
-                "9,0":{message:"職員玄関に入った。",sound:"open",toMap:7,x:16,y:704},
-                "10,0":{message:"職員玄関に入った。",sound:"open",toMap:7,x:16,y:704}
+                "15,39":{message:"職員玄関に入った。",sound:"open",toMap:7,x:16,y:704},
+                "15,40":{message:"職員玄関に入った。",sound:"open",toMap:7,x:16,y:704},
+                "15,41":{message:"職員玄関に入った。",sound:"open",toMap:7,x:16,y:704},
+                "17,46":{message:"3年校舎に入った。",sound:"open",toMap:7,x:160,y:944},
+                "18,46":{message:"3年校舎に入った。",sound:"open",toMap:7,x:160,y:944},
+                "17,52":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "18,52":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "21,47":{message:"正門"},
+                "21,48":{message:"正門"},
+                "21,49":{message:"正門"},
+                "21,50":{message:"正門"},
+                "21,51":{message:"正門"}
             }
         };
 
@@ -913,7 +986,7 @@
         mapData[6].forEach((row,y) => {
             [...row].forEach((c,x) => {
                 if (c === "d" && y >= 3) {
-                    stepData[6][x + "," + y] = {message:"外に出た。",sound:"open",toMap:9,x:32,y:80};
+                    stepData[6][x + "," + y] = {message:"外に出た。",sound:"open",toMap:9,x:80,y:32};
                 };
             });
         });
@@ -1447,7 +1520,7 @@
             6:[1,1],
             7:[1,8],
             8:[12,16],
-            9:[2,5]
+            9:[5,2]
         };
 
         const warp = (mapId,tx,ty) => {
