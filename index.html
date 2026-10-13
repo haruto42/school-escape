@@ -45,6 +45,18 @@
             border: 3px solid #000000;
         }
 
+        #items {
+            position: fixed;
+            top: 6px;
+            left: 8px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            font-size: min(3.5vw, 16px);
+            pointer-events: none;
+        }
+
         #message {
             position: fixed;
             top: 6%;
@@ -134,6 +146,7 @@
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <div id="items" hidden></div>
     <div id="message" hidden></div>
     <div id="gameOver">
         <div id="gameOverText">GAME OVER</div>
@@ -185,6 +198,8 @@
             x:"#aaaaaa",//濃いコンクリート
             y:"#8a8a8a",//濃いコンクリートの継ぎ目
             z:"#9b9b9b",//濃いコンクリートのざらつき
+            r:"#b3433a",//ソファーの座面
+            d:"#7d2a24",//ソファーの背もたれ
             s:"#f0ead6",//ミルク庫の壁
             t:"#3a6fb0"//青(ミルク庫)
         };
@@ -498,14 +513,122 @@
                 "qppppp1qq1pppppp",
                 "qppp1vvvvvv1pppp",
                 "qppp11111111pppp"
+            ],
+            17:[//long table(長机。マップ上の文字は h)
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbeeeebbeeeebbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbeeeebbeeeebbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb"
+            ],
+            18:[//sofa(ソファー・背もたれが上。マップ上の文字は i)
+                "1111111111111111",
+                "1dddddddddddddd1",
+                "1dddddddddddddd1",
+                "1dddddddddddddd1",
+                "1dddddddddddddd1",
+                "1111111111111111",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1111111111111111",
+                "8888888888888888"
+            ],
+            19:[//sofa(ソファー・背もたれが下。マップ上の文字は j)
+                "8888888888888888",
+                "1111111111111111",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1rrrrrrrrrrrrrr1",
+                "1111111111111111",
+                "1dddddddddddddd1",
+                "1dddddddddddddd1",
+                "1dddddddddddddd1",
+                "1dddddddddddddd1",
+                "1111111111111111"
+            ],
+            20:[//telephone(電話。マップ上の文字は k)
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbb1111111111bbb",
+                "bbb1111111111bbb",
+                "bbbb1qqqqqq1bbbb",
+                "bbbb1q0qq0q1bbbb",
+                "bbbb1qqqqqq1bbbb",
+                "bbbb1q0qq0q1bbbb",
+                "bbbb1qqqqqq1bbbb",
+                "bbbb11111111bbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb"
+            ],
+            21:[//rubble(がれき。マップ上の文字は l)
+                "8888888888888888",
+                "8888888888888888",
+                "888888888yyyy888",
+                "88yyy8888yqqq888",
+                "88yqq8888yqqq888",
+                "8888888888888888",
+                "8888888888888888",
+                "8888888888888888",
+                "88888yyy88888888",
+                "88888yqq888yyy88",
+                "88888yqq888yqq88",
+                "88888888888yqq88",
+                "8yyyy88888888888",
+                "8yqqq888yyy88888",
+                "88888888yqq88888",
+                "8888888888888888"
+            ],
+            22:[//locker(ロッカー。マップ上の文字は m)
+                "1111111111111111",
+                "1aaaaaa11aaaaaa1",
+                "1aaaaaa11aaaaaa1",
+                "1a1111a11a1111a1",
+                "1aaaaaa11aaaaaa1",
+                "1a1111a11a1111a1",
+                "1aaaaaa11aaaaaa1",
+                "1a1111a11a1111a1",
+                "1aaaaaa11aaaaaa1",
+                "1aaaaaa11aaaaaa1",
+                "1aaaa1a11a1aaaa1",
+                "1aaaa1a11a1aaaa1",
+                "1aaaa1a11a1aaaa1",
+                "1aaaaaa11aaaaaa1",
+                "1aaaaaa11aaaaaa1",
+                "1111111111111111"
             ]
         };
 
         // 通れないタイル(floor以外)
-        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14,16]);
+        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14,16,17,18,19,20,22]);
 
         // 触れると反応するタイル(ドア・階段)
-        const touchTiles = new Set([5,7,8,9,16]);
+        const touchTiles = new Set([5,7,8,9,16,20,22]);
 
         // 1行=1文字1タイルの文字列。縦横のサイズはマップごとに自由
         const mapData = {
@@ -714,7 +837,7 @@
                 "221cc1222222222222",
                 "221111222222222222"
             ],
-            7:[//3年校舎(仮)。西の壁: 職員室(行14,27)・応接室(行31,38)・職員玄関(行42-46)・保健室(行50,57。ハーフサイズ)。南端の壁に外へ出る扉3つ(c9-11)
+            7:[//3年校舎(仮)。西の壁: 職員室(行14,27)・応接室(行31,38)・職員玄関(行42-46)・保健室(行50,57。ハーフサイズ)・ロッカー(7,53)。南端の壁に外へ出る扉3つ(c9-11)
                 "22222221111111",
                 "22222221000001",
                 "22222221000001",
@@ -768,7 +891,7 @@
                 "22222225000001",
                 "22222229000001",
                 "22222221000001",
-                "22222221000001",
+                "2222222m000001",
                 "22222221000001",
                 "22222221000001",
                 "22222229000001",
@@ -852,6 +975,20 @@
                 "2ffffffffffffffffccffg2",
                 "2ffffffffffffffffccffg2",
                 "22222222222222222551112"
+            ],
+            10:[//応接室(ハーフサイズ)。中央に長机(c4-9,行5-6)、上下にソファー(行3,行8)、長机の中央に電話(6,5)。ドアは東の壁の行2と行9
+                "11111111111111",
+                "10000000000001",
+                "10000000000005",
+                "1000iiiiii0001",
+                "10000000000001",
+                "1000hhkhhh0001",
+                "1000hhhhhh0001",
+                "10000000000001",
+                "1000jjjjjj0001",
+                "10000000000005",
+                "10000000000001",
+                "11111111111111"
             ]
         };
 
@@ -941,8 +1078,8 @@
                 "7,27":{message:"職員室に入った。",sound:"open",toMap:8,x:192,y:256},
                 "7,15":{message:"職員室"},
                 "7,26":{message:"職員室"},
-                "7,31":{message:"ドアには鍵がかかっている……",sound:"locked"},
-                "7,38":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "7,31":{requires:"receptionKey",event:"receptionStart",message:"鍵を開けて、応接室に入った。",sound:"open",toMap:10,x:192,y:32},
+                "7,38":{requires:"receptionKey",event:"receptionStart",message:"鍵を開けて、応接室に入った。",sound:"open",toMap:10,x:192,y:144},
                 "7,32":{message:"応接室"},
                 "7,37":{message:"応接室"},
                 "7,50":{message:"ドアには鍵がかかっている……",sound:"locked"},
@@ -954,7 +1091,8 @@
                 "0,45":{message:"外に出た。",sound:"open",toMap:9,x:224,y:640},
                 "9,60":{message:"外に出た。",sound:"open",toMap:9,x:272,y:752},
                 "10,60":{message:"外に出た。",sound:"open",toMap:9,x:272,y:752},
-                "11,60":{message:"外に出た。",sound:"open",toMap:9,x:272,y:752}
+                "11,60":{message:"外に出た。",sound:"open",toMap:9,x:272,y:752},
+                "7,53":{event:"locker"}
             },
             8:{//職員室
                 "13,3":{message:"廊下に戻った。",sound:"open",toMap:7,x:128,y:224},
@@ -973,6 +1111,11 @@
                 "21,49":{message:"正門"},
                 "21,50":{message:"正門"},
                 "21,51":{message:"正門"}
+            },
+            10:{//応接室
+                "13,2":{blockedIf:"receptionLocked",message:"廊下に戻った。",sound:"open",toMap:7,x:128,y:496},
+                "13,9":{blockedIf:"receptionLocked",message:"廊下に戻った。",sound:"open",toMap:7,x:128,y:608},
+                "6,5":{message:"電話"}
             }
         };
 
@@ -1065,9 +1208,43 @@
             4:[makeTeacher(160,448)]
         };
 
+        // 拾える物。マップごとに並べる(taken=trueで消える)
+        const itemDefs = {
+            receptionKey:{name:"応接室の鍵"}
+        };
+
+        const keyTex = [//key
+            "................",
+            "................",
+            "................",
+            "................",
+            "................",
+            "..1111..........",
+            ".133331.........",
+            ".133331111111...",
+            ".13333333333331.",
+            ".133331111111...",
+            "..1111...1331...",
+            "..........11....",
+            "................",
+            "................",
+            "................",
+            "................"
+        ];
+
+        const mapItems = {
+            8:[//職員室: 教卓のそば
+                {id:"receptionKey",taken:false,x:144,y:32,w:16,h:16,tex:keyTex}
+            ]
+        };
+
         const gameData = {
             mapId:1,
-            over:false
+            over:false,
+            items:{},
+            flags:{},
+            frozen:false,
+            hidden:false
         };
 
         const startState = {
@@ -1110,6 +1287,12 @@
             tileTextures[id] = makeTexture(tileData[id]);
         };
         player.texture = makeTexture(player.tex);
+        for (const mapId in mapItems) {
+            mapItems[mapId].forEach((item) => {
+                item.texture = makeTexture(item.tex);
+            });
+        };
+
         for (const mapId in npcs) {
             npcs[mapId].forEach((npc) => {
                 npc.texture = makeTexture(npc.tex);
@@ -1243,6 +1426,75 @@
                 this.tone("square",320,180,0.1,0.06);
             },
 
+            // 電話の着信音: 高低を交互に6回
+            ring() {
+                for (let i = 0; i < 6; i++) {
+                    const freq = i%2 ? 1500 : 1200;
+                    this.tone("square",freq,freq,i*0.09,0.07,0.45);
+                };
+            },
+
+            // 機械音声「いまからいくね」: のこぎり波に母音の響き(フォルマント)を付けて7音節
+            robotVoice() {
+                if (!this.ctx) {
+                    return;
+                };
+                const syllables = [[300,2300],[800,1300],[800,1300],[800,1300],[300,2300],[350,1300],[500,1900]];
+                const pitches = [210,190,200,180,210,190,230];
+                const step = 0.25;
+                syllables.forEach((formants,i) => {
+                    const start = this.ctx.currentTime + i*step;
+                    const osc = this.ctx.createOscillator();
+                    const amp = this.ctx.createGain();
+                    osc.type = "sawtooth";
+                    osc.frequency.setValueAtTime(pitches[i],start);
+                    amp.gain.setValueAtTime(0.001,start);
+                    amp.gain.linearRampToValueAtTime(1.6,start + 0.03);
+                    amp.gain.setValueAtTime(1.6,start + 0.17);
+                    amp.gain.linearRampToValueAtTime(0.001,start + 0.21);
+                    formants.forEach((freq) => {
+                        const filter = this.ctx.createBiquadFilter();
+                        filter.type = "bandpass";
+                        filter.frequency.value = freq;
+                        filter.Q.value = 6;
+                        osc.connect(filter);
+                        filter.connect(amp);
+                    });
+                    amp.connect(this.ctx.destination);
+                    osc.start(start);
+                    osc.stop(start + 0.22);
+                });
+            },
+
+            // 壁が壊れる音: ノイズと低い響き
+            crash() {
+                if (!this.ctx) {
+                    return;
+                };
+                const length = Math.floor(this.ctx.sampleRate*0.7);
+                const buffer = this.ctx.createBuffer(1,length,this.ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < length; i++) {
+                    data[i] = Math.random()*2 - 1;
+                };
+                const noise = this.ctx.createBufferSource();
+                const gain = this.ctx.createGain();
+                noise.buffer = buffer;
+                gain.gain.setValueAtTime(this.volume,this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001,this.ctx.currentTime + 0.7);
+                noise.connect(gain);
+                gain.connect(this.ctx.destination);
+                noise.start();
+                this.tone("sawtooth",300,50,0,0.5,0.6);
+                this.tone("square",160,40,0,0.5,0.4);
+            },
+
+            // 拾ったとき: 上がる2音
+            pickup() {
+                this.tone("square",600,900,0,0.08,0.7);
+                this.tone("triangle",900,1300,0.08,0.12);
+            },
+
             // 捕まった瞬間: 鋭く下がる不協和音
             caught() {
                 this.tone("sawtooth",900,120,0,0.35,0.6);
@@ -1293,6 +1545,270 @@
             };
         };
 
+        const itemHud = document.getElementById("items");
+
+        const updateItemHud = () => {
+            const names = Object.keys(gameData.items).map((id) => itemDefs[id].name);
+            itemHud.hidden = names.length === 0;
+            itemHud.textContent = "持ち物: " + names.join("、");
+        };
+
+        // 床の物に重なったら拾う
+        const checkPickup = () => {
+            (mapItems[gameData.mapId] || []).forEach((item) => {
+                if (!item.taken && isNear(player,item,-4)) {
+                    item.taken = true;
+                    gameData.items[item.id] = true;
+                    showMessage(itemDefs[item.id].name + "を手に入れた。");
+                    sound.pickup();
+                    updateItemHud();
+                };
+            });
+        };
+
+        // 応接室のイベント: 入ると電話が鳴り、閉じ込められる → 電話に近づくと声 → 壁が壊れる
+        const receptionRoom = mapData[10].slice();
+        const phoneTile = {x:6,y:5};
+        const receptionEvent = {
+            phase:0,
+            ringTimer:null,
+            breakTimer:null
+        };
+
+        const stopRing = () => {
+            clearInterval(receptionEvent.ringTimer);
+            receptionEvent.ringTimer = null;
+        };
+
+        const destroyWall = () => {
+            // 上の壁(行0, c5-8)をヴォイドに、その下の床(行1)をがれきにする
+            for (let x = 5; x <= 8; x++) {
+                mapData[10][0] = mapData[10][0].slice(0,x) + "2" + mapData[10][0].slice(x + 1);
+                mapData[10][1] = mapData[10][1].slice(0,x) + "l" + mapData[10][1].slice(x + 1);
+            };
+            sound.crash();
+            canvas.classList.add("shake");
+            setTimeout(() => {
+                canvas.classList.remove("shake");
+            },500);
+            receptionEvent.phase = 3;
+        };
+
+        const hideTime = 3000;
+        let hideTimer = null;
+
+        const events = {
+            // 追いかけられていなければ、ヒントだけ。追いかけられていれば、隠れて先生を撒く
+            locker() {
+                if (gameData.hidden) {
+                    return;
+                };
+                if (!chaser.active) {
+                    showMessage("追いかけられたら、ここに隠れられるかもしれない。");
+                    return;
+                };
+                gameData.hidden = true;
+                gameData.frozen = true;
+                showMessage("ロッカーに隠れた……");
+                sound.open();
+                hideTimer = setTimeout(() => {
+                    chaser.active = false;
+                    gameData.hidden = false;
+                    gameData.frozen = false;
+                    showMessage("先生は行ってしまった。もう大丈夫そうだ。");
+                },hideTime);
+            },
+
+            receptionStart() {
+                if (receptionEvent.phase !== 0) {
+                    return;
+                };
+                receptionEvent.phase = 1;
+                gameData.flags.receptionLocked = true;
+                sound.ring();
+                receptionEvent.ringTimer = setInterval(() => sound.ring(),2000);
+            }
+        };
+
+        // 追いかけてくる先生(マップをまたいで追う)。遅めの速度で、壁を避けて近づく
+        const chaser = {
+            active:false,
+            waiting:0,
+            mapId:0,
+            x:0,
+            y:0,
+            w:16,
+            h:16,
+            tx:0,
+            ty:0,
+            spawnX:0,
+            spawnY:0,
+            path:[],
+            speed:100,
+            slide:0,
+            pause:0,
+            reason:"先生に捕まってしまった",
+            tex:teacherTex
+        };
+        chaser.texture = makeTexture(chaser.tex);
+
+        // 縦横4方向のマス移動で、通れるマスをたどる最短経路(次のマスから目的地まで)
+        const findPath = (sx,sy,gx,gy) => {
+            const map = mapData[gameData.mapId];
+            const width = map[0].length;
+            const height = map.length;
+            const key = (x,y) => y*width + x;
+            const prev = new Map([[key(sx,sy),null]]);
+            const queue = [[sx,sy]];
+
+            for (let i = 0; i < queue.length; i++) {
+                const [x,y] = queue[i];
+                if (x === gx && y === gy) {
+                    break;
+                };
+                for (const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+                    const nx = x + dx;
+                    const ny = y + dy;
+                    if (nx < 0 || ny < 0 || nx >= width || ny >= height || prev.has(key(nx,ny))) {
+                        continue;
+                    };
+                    if (!(nx === gx && ny === gy) && solidTiles.has(getTile(nx,ny))) {
+                        continue;
+                    };
+                    prev.set(key(nx,ny),[x,y]);
+                    queue.push([nx,ny]);
+                };
+            };
+
+            if (!prev.has(key(gx,gy))) {
+                return [];
+            };
+            const path = [];
+            let cur = [gx,gy];
+            while (cur && !(cur[0] === sx && cur[1] === sy)) {
+                path.unshift(cur);
+                cur = prev.get(key(cur[0],cur[1]));
+            };
+            return path;
+        };
+
+        const updateChaser = (delta) => {
+            if (!chaser.active || chaser.mapId !== gameData.mapId) {
+                return;
+            };
+            const size = config.tileSize;
+
+            // 別のマップから追ってきたときは、少し遅れて、プレイヤーが入ってきた場所に現れる
+            if (chaser.waiting > 0) {
+                chaser.waiting -= delta;
+                if (chaser.waiting <= 0) {
+                    chaser.waiting = 0;
+                    chaser.x = chaser.spawnX;
+                    chaser.y = chaser.spawnY;
+                    chaser.tx = Math.floor(chaser.x/size);
+                    chaser.ty = Math.floor(chaser.y/size);
+                    chaser.path = [];
+                };
+                return;
+            };
+
+            // 滑り込んだあと、少しその場で立ち止まってから追いかけ始める
+            if (chaser.slide <= 0 && chaser.pause > 0) {
+                chaser.pause -= delta;
+                return;
+            };
+
+            let budget = (chaser.slide > 0 ? chaser.speed*2 : chaser.speed)*delta;
+            chaser.slide = Math.max(0,chaser.slide - delta);
+
+            for (let guard = 0; budget > 0 && guard < 8; guard++) {
+                if (chaser.path.length === 0) {
+                    chaser.path = findPath(
+                        chaser.tx,
+                        chaser.ty,
+                        Math.floor((player.x + player.w/2)/size),
+                        Math.floor((player.y + player.h/2)/size)
+                    );
+                    if (chaser.path.length === 0) {
+                        break;
+                    };
+                };
+                const next = chaser.path[0];
+                const targetX = next[0]*size;
+                const targetY = next[1]*size;
+                const dx = targetX - chaser.x;
+                const dy = targetY - chaser.y;
+                const dist = Math.hypot(dx,dy);
+
+                if (dist <= budget) {
+                    chaser.x = targetX;
+                    chaser.y = targetY;
+                    chaser.tx = next[0];
+                    chaser.ty = next[1];
+                    chaser.path = [];   // 1マス進むごとに、経路を取り直す
+                    budget -= dist;
+                } else {
+                    chaser.x += dx/dist*budget;
+                    chaser.y += dy/dist*budget;
+                    budget = 0;
+                };
+            };
+        };
+
+        const chaserVisible = () => chaser.active && chaser.waiting <= 0 && chaser.mapId === gameData.mapId;
+
+        // プレイヤーがマップを移ったら、先生もそのマップへ追いかける
+        const chaserFollowPlayer = () => {
+            if (!chaser.active || chaser.mapId === gameData.mapId) {
+                return;
+            };
+            chaser.mapId = gameData.mapId;
+            chaser.waiting = 1.2;
+            chaser.spawnX = Math.floor(player.x/config.tileSize)*config.tileSize;
+            chaser.spawnY = Math.floor(player.y/config.tileSize)*config.tileSize;
+        };
+
+        // 電話の通話が終わったら、壁が壊れてドアが開き、先生が滑り込んでくる
+        const startChase = () => {
+            chaser.active = true;
+            chaser.waiting = 0;
+            chaser.mapId = 10;
+            chaser.tx = 6;
+            chaser.ty = 0;
+            chaser.x = chaser.tx*config.tileSize;
+            chaser.y = chaser.ty*config.tileSize;
+            chaser.path = [];
+            chaser.slide = 0.16;
+            chaser.pause = 0.7;
+        };
+
+        const finishCall = () => {
+            destroyWall();
+            gameData.flags.receptionLocked = false;
+            gameData.frozen = false;
+            showMessage("ドアが開いた。");
+            sound.open();
+            startChase();
+        };
+
+        // 電話に近づいたら声が流れ、言い終わったら壁が壊れる
+        const checkPhone = () => {
+            if (gameData.mapId !== 10 || receptionEvent.phase !== 1) {
+                return;
+            };
+            const size = config.tileSize;
+            const dx = player.x + player.w/2 - (phoneTile.x*size + size/2);
+            const dy = player.y + player.h/2 - (phoneTile.y*size + size/2);
+            if (Math.hypot(dx,dy) <= size*1.8) {
+                receptionEvent.phase = 2;
+                stopRing();
+                gameData.frozen = true;
+                showMessage("今から行くね");
+                sound.robotVoice();
+                receptionEvent.breakTimer = setTimeout(finishCall,2000);
+            };
+        };
+
         // 足元(体の中心)のタイルがstepDataにあれば発動する
         const checkStep = () => {
             const size = config.tileSize;
@@ -1305,6 +1821,20 @@
         };
 
         const runAction = (data) => {
+            // 閉じ込められている間は開かない
+            if (data.blockedIf && gameData.flags[data.blockedIf]) {
+                showMessage(data.blockedMessage || "ドアが開かない……");
+                sound.locked();
+                return;
+            };
+
+            // 必要な物を持っていなければ開かない
+            if (data.requires && !gameData.items[data.requires]) {
+                showMessage(data.lockedMessage || "ドアには鍵がかかっている……");
+                sound.locked();
+                return;
+            };
+
             if (data.message) {
                 showMessage(data.message);
             };
@@ -1320,6 +1850,12 @@
                 gameData.mapId = data.toMap;
                 player.x = data.x;
                 player.y = data.y;
+            };
+            if (data.toMap) {
+                chaserFollowPlayer();
+            };
+            if (data.event) {
+                events[data.event]();
             };
         };
 
@@ -1447,6 +1983,33 @@
             && entity.y < npc.y + npc.h && entity.y + entity.h > npc.y
         );
 
+        const isBlockedAt = (x,y) => {
+            const saveX = player.x;
+            const saveY = player.y;
+            player.x = x;
+            player.y = y;
+            const blocked = getBlockingTiles(player).length > 0 || collidesWithNpc(player);
+            player.x = saveX;
+            player.y = saveY;
+            return blocked;
+        };
+
+        // ぶつかった先に、少しずれた位置からなら通れるすき間があれば、1ピクセルずつそちらへ寄せる
+        const nudgeMax = 8;
+
+        const findNudge = (dx,dy) => {
+            for (let k = 1; k <= nudgeMax; k++) {
+                for (const sign of [-1,1]) {
+                    const offsetX = dy !== 0 ? sign*k : 0;
+                    const offsetY = dx !== 0 ? sign*k : 0;
+                    if (!isBlockedAt(player.x + dx + offsetX,player.y + dy + offsetY)) {
+                        return {x:Math.sign(offsetX),y:Math.sign(offsetY)};
+                    };
+                };
+            };
+            return null;
+        };
+
         const movePlayer = (dx,dy,steps) => {
             for (let i = 0; i < steps; i++) {
                 player.x += dx;
@@ -1455,6 +2018,13 @@
                 if (tiles.length > 0 || collidesWithNpc(player)) {
                     player.x -= dx;
                     player.y -= dy;
+
+                    const nudge = findNudge(dx,dy);
+                    if (nudge && !isBlockedAt(player.x + nudge.x,player.y + nudge.y)) {
+                        player.x += nudge.x;
+                        player.y += nudge.y;
+                        continue;
+                    };
                     return tiles;
                 };
             };
@@ -1501,6 +2071,22 @@
             Object.values(npcs).flat().forEach((npc) => {
                 npc.visible = false;
             });
+            Object.values(mapItems).flat().forEach((item) => {
+                item.taken = false;
+            });
+            gameData.items = {};
+            gameData.flags = {};
+            gameData.frozen = false;
+            gameData.hidden = false;
+            chaser.active = false;
+            chaser.waiting = 0;
+            clearTimeout(hideTimer);
+            stopRing();
+            clearTimeout(receptionEvent.breakTimer);
+            receptionEvent.phase = 0;
+            mapData[10] = receptionRoom.slice();
+            canvas.classList.remove("shake");
+            updateItemHud();
             moveRemain = 0;
             againButton.disabled = true;
             gameOverScreen.classList.remove("show");
@@ -1510,7 +2096,7 @@
         againButton.addEventListener("click",restart);
 
         // 【一時的・配布前に削除】デバッグ用: F12のコンソールで warp(マップID) と入力すると、そのマップへ移動する
-        // warp(マップID, タイルx, タイルy) で位置も指定できる。ID: 1教室 2三階 3二階 4一階 5校庭 6渡り廊下 7三年下駄箱 8職員室 9外
+        // warp(マップID, タイルx, タイルy) で位置も指定できる。ID: 1教室 2三階 3二階 4一階 5校庭 6渡り廊下 7三年下駄箱 8職員室 9外 10応接室
         const warpSpots = {
             1:[12,16],
             2:[4,28],
@@ -1520,7 +2106,8 @@
             6:[1,1],
             7:[1,8],
             8:[12,16],
-            9:[5,2]
+            9:[5,2],
+            10:[12,2]
         };
 
         const warp = (mapId,tx,ty) => {
@@ -1537,6 +2124,7 @@
             gameData.mapId = mapId;
             player.x = (tx === undefined ? spot[0] : tx)*config.tileSize;
             player.y = (ty === undefined ? spot[1] : ty)*config.tileSize;
+            chaserFollowPlayer();
             if (isColliding(player)) {
                 console.log("そこは壁の中です。別の位置を指定してください");
             };
@@ -1553,7 +2141,12 @@
             lastTime = time;
 
             if (!gameData.over) {
-                moveRemain += player.speed*delta;
+                // 電話中・ロッカーに隠れている間は動けない
+                if (gameData.frozen) {
+                    moveRemain = 0;
+                } else {
+                    moveRemain += player.speed*delta;
+                };
                 const steps = Math.floor(moveRemain);
                 moveRemain -= steps;
 
@@ -1583,6 +2176,13 @@
 
                 touchDoor(touched);
                 checkStep();
+                checkPickup();
+                checkPhone();
+
+                updateChaser(delta);
+                if (chaserVisible() && !gameData.hidden && isNear(player,chaser,0)) {
+                    startGameOver(chaser.reason);
+                };
 
                 const catcher = visibleNpcs().find((npc) => npc.catches && isNear(player,npc,2));
                 if (catcher) {
@@ -1592,8 +2192,14 @@
 
             updateCamera();
             drawMap(gameData.mapId);
+            (mapItems[gameData.mapId] || []).filter((item) => !item.taken).forEach(drawEntity);
             visibleNpcs().forEach(drawEntity);
-            drawEntity(player);
+            if (chaserVisible()) {
+                drawEntity(chaser);
+            };
+            if (!gameData.hidden) {
+                drawEntity(player);
+            };
 
             requestAnimationFrame(gameLoop);
         };
