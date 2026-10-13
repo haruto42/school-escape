@@ -180,6 +180,16 @@
             b:"#c68642",//机の天板
             c:"#1f5c3a",//黒板
             e:"#8b5a2b",//黒板の枠
+            A:"#f7f6f5",//肖像画の色
+            B:"#2b2019",//肖像画の色
+            C:"#bd794f",//肖像画の色
+            D:"#a6a6a6",//肖像画の色
+            E:"#6c5142",//肖像画の色
+            F:"#888587",//肖像画の色
+            G:"#f5a56f",//肖像画の色
+            H:"#13193d",//肖像画の色
+            I:"#4a2f14",//額縁(外側)
+            J:"#c9a227",//額縁(内側)
             f:"#8fd0f5",//窓ガラス
             g:"#c8c8c8",//階段(上段)
             h:"#8c8c8c",//階段(中段)
@@ -621,14 +631,50 @@
                 "1aaaaaa11aaaaaa1",
                 "1aaaaaa11aaaaaa1",
                 "1111111111111111"
+            ],
+            23:[//portrait(肖像画。teacher.jpgの顔を縮小。マップ上の文字は n)
+                "IIIIIIIIIIIIIIII",
+                "IJJJJJJJJJJJJJJI",
+                "IJAAADEFFEDAAAJI",
+                "IJAAEBBBBBBEAAJI",
+                "IJABBBBBBBBBEAJI",
+                "IJFBBBCGGCBBBFJI",
+                "IJEBBEGGGGEBBFJI",
+                "IJFBECCGGECBBAJI",
+                "IJDECGGGGCGEEAJI",
+                "IJAECGGCCGGCEAJI",
+                "IJADCGCCCCGEAAJI",
+                "IJAAEGGGGGCFAAJI",
+                "IJAFHCCCCCFHDAJI",
+                "IJHHHAGCCAFHHHJI",
+                "IJJJJJJJJJJJJJJI",
+                "IIIIIIIIIIIIIIII"
+            ],
+            24:[//piano(ピアノ。マップ上の文字は o)
+                "0000001q11111111",
+                "0001111q11111111",
+                "0001111q11111111",
+                "qqqqqq1q11111111",
+                "0000001q11111111",
+                "0001111q11111111",
+                "0001111q11111111",
+                "qqqqqq1q11111111",
+                "0000001q11111111",
+                "0001111q11111111",
+                "0001111q11111111",
+                "qqqqqq1q11111111",
+                "0000001q11111111",
+                "0001111q11111111",
+                "0001111q11111111",
+                "qqqqqq1q11111111"
             ]
         };
 
         // 通れないタイル(floor以外)
-        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14,16,17,18,19,20,22]);
+        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14,16,17,18,19,20,22,23,24]);
 
         // 触れると反応するタイル(ドア・階段)
-        const touchTiles = new Set([5,7,8,9,16,20,22]);
+        const touchTiles = new Set([5,7,8,9,16,20,22,23,24]);
 
         // 1行=1文字1タイルの文字列。縦横のサイズはマップごとに自由
         const mapData = {
@@ -989,6 +1035,19 @@
                 "10000000000005",
                 "10000000000001",
                 "11111111111111"
+            ],
+            11:[//音楽室。北の壁(行0, c6)にドア、南の壁(行10, c6)に肖像画、東側(c11, 行4-5)にピアノ
+                "1111115111111",
+                "1000000000001",
+                "1000000000001",
+                "1000000000001",
+                "10000000000o1",
+                "10000000000o1",
+                "1000000000001",
+                "1000000000001",
+                "1000000000001",
+                "1000000000001",
+                "111111n111111"
             ]
         };
 
@@ -1028,7 +1087,7 @@
                 "0,47":{message:"ドアには鍵がかかっている……",sound:"locked"},
                 "0,22":{message:"ドアには鍵がかかっている……",sound:"locked"},
                 "0,9":{message:"ドアには鍵がかかっている……",sound:"locked"},
-                "3,49":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "3,49":{requires:"musicKey",message:"鍵を開けて、音楽室に入った。",sound:"open",toMap:11,x:96,y:16},
                 "6,30":{message:"階段を降りた。(1階)",toMap:4,x:176,y:448,show:"teacher"},
                 "6,29":{message:"階段を降りた。(1階)",toMap:4,x:176,y:448,show:"teacher"},
                 "6,5":{message:"階段を降りた。(1階)",toMap:4,x:176,y:48},
@@ -1116,6 +1175,12 @@
                 "13,2":{blockedIf:"receptionLocked",message:"廊下に戻った。",sound:"open",toMap:7,x:128,y:496},
                 "13,9":{blockedIf:"receptionLocked",message:"廊下に戻った。",sound:"open",toMap:7,x:128,y:608},
                 "6,5":{message:"電話"}
+            },
+            11:{//音楽室
+                "6,0":{message:"廊下に戻った。",sound:"open",toMap:3,x:48,y:768},
+                "11,4":{message:"ピアノ"},
+                "11,5":{message:"ピアノ"},
+                "6,10":{message:"肖像画"}
             }
         };
 
@@ -1210,7 +1275,8 @@
 
         // 拾える物。マップごとに並べる(taken=trueで消える)
         const itemDefs = {
-            receptionKey:{name:"応接室の鍵"}
+            receptionKey:{name:"応接室の鍵"},
+            musicKey:{name:"音楽室の鍵"}
         };
 
         const keyTex = [//key
@@ -1232,7 +1298,12 @@
             "................"
         ];
 
+        const musicKeyTex = keyTex.map((row) => row.replace(/3/g,"f"));   // 色違い(水色)の鍵
+
         const mapItems = {
+            10:[//応接室: 一度出て戻ると、がれきの所に現れる
+                {id:"musicKey",showFlag:"musicKeyShown",taken:false,x:96,y:16,w:16,h:16,tex:musicKeyTex}
+            ],
             8:[//職員室: 教卓のそば
                 {id:"receptionKey",taken:false,x:144,y:32,w:16,h:16,tex:keyTex}
             ]
@@ -1554,9 +1625,11 @@
         };
 
         // 床の物に重なったら拾う
+        const itemVisible = (item) => !item.taken && (!item.showFlag || gameData.flags[item.showFlag]);
+
         const checkPickup = () => {
             (mapItems[gameData.mapId] || []).forEach((item) => {
-                if (!item.taken && isNear(player,item,-4)) {
+                if (itemVisible(item) && isNear(player,item,-4)) {
                     item.taken = true;
                     gameData.items[item.id] = true;
                     showMessage(itemDefs[item.id].name + "を手に入れた。");
@@ -1847,9 +1920,18 @@
                 });
             };
             if (data.toMap) {
+                const prevMap = gameData.mapId;
                 gameData.mapId = data.toMap;
                 player.x = data.x;
                 player.y = data.y;
+
+                // 応接室を、壁が壊れたあとに一度出て、また戻ってくると、音楽室の鍵が現れる
+                if (prevMap === 10 && receptionEvent.phase === 3) {
+                    gameData.flags.receptionLeft = true;
+                };
+                if (data.toMap === 10 && gameData.flags.receptionLeft) {
+                    gameData.flags.musicKeyShown = true;
+                };
             };
             if (data.toMap) {
                 chaserFollowPlayer();
@@ -2096,7 +2178,7 @@
         againButton.addEventListener("click",restart);
 
         // 【一時的・配布前に削除】デバッグ用: F12のコンソールで warp(マップID) と入力すると、そのマップへ移動する
-        // warp(マップID, タイルx, タイルy) で位置も指定できる。ID: 1教室 2三階 3二階 4一階 5校庭 6渡り廊下 7三年下駄箱 8職員室 9外 10応接室
+        // warp(マップID, タイルx, タイルy) で位置も指定できる。ID: 1教室 2三階 3二階 4一階 5校庭 6渡り廊下 7三年下駄箱 8職員室 9外 10応接室 11音楽室
         const warpSpots = {
             1:[12,16],
             2:[4,28],
@@ -2107,7 +2189,8 @@
             7:[1,8],
             8:[12,16],
             9:[5,2],
-            10:[12,2]
+            10:[12,2],
+            11:[6,1]
         };
 
         const warp = (mapId,tx,ty) => {
@@ -2192,7 +2275,7 @@
 
             updateCamera();
             drawMap(gameData.mapId);
-            (mapItems[gameData.mapId] || []).filter((item) => !item.taken).forEach(drawEntity);
+            (mapItems[gameData.mapId] || []).filter(itemVisible).forEach(drawEntity);
             visibleNpcs().forEach(drawEntity);
             if (chaserVisible()) {
                 drawEntity(chaser);
