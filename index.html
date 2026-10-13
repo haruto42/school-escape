@@ -45,6 +45,58 @@
             border: 3px solid #000000;
         }
 
+        #piano {
+            position: fixed;
+            bottom: 3%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            width: min(92vw, 520px);
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.88);
+            color: #ffffff;
+            text-align: center;
+        }
+
+        #pianoInfo {
+            min-height: 1.4em;
+            margin-bottom: 8px;
+            font-size: min(4vw, 18px);
+        }
+
+        #pianoKeys {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .pianoKey {
+            flex: 1;
+            height: min(24vw, 110px);
+            border: 2px solid #000000;
+            border-radius: 0 0 6px 6px;
+            background: #ffffff;
+            color: #000000;
+            font-size: min(3.6vw, 16px);
+            cursor: pointer;
+        }
+
+        .pianoKey:active {
+            background: #cccccc;
+        }
+
+        #pianoClose {
+            margin-top: 8px;
+            padding: 4px 18px;
+            border: 2px solid #ffffff;
+            border-radius: 6px;
+            background: #000000;
+            color: #ffffff;
+            font-size: min(3.6vw, 16px);
+            cursor: pointer;
+        }
+
         #items {
             position: fixed;
             top: 6px;
@@ -146,6 +198,19 @@
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <div id="piano" hidden>
+        <div id="pianoInfo"></div>
+        <div id="pianoKeys">
+            <button class="pianoKey" id="pk0">ド</button>
+            <button class="pianoKey" id="pk1">レ</button>
+            <button class="pianoKey" id="pk2">ミ</button>
+            <button class="pianoKey" id="pk3">ファ</button>
+            <button class="pianoKey" id="pk4">ソ</button>
+            <button class="pianoKey" id="pk5">ラ</button>
+            <button class="pianoKey" id="pk6">シ</button>
+        </div>
+        <button id="pianoClose">やめる</button>
+    </div>
     <div id="items" hidden></div>
     <div id="message" hidden></div>
     <div id="gameOver">
@@ -189,6 +254,7 @@
             G:"#f5a56f",//肖像画の色
             H:"#13193d",//肖像画の色
             I:"#4a2f14",//額縁(外側)
+            K:"#e0b46a",//目印の下駄箱(明るい木)
             J:"#c9a227",//額縁(内側)
             f:"#8fd0f5",//窓ガラス
             g:"#c8c8c8",//階段(上段)
@@ -667,14 +733,50 @@
                 "0001111q11111111",
                 "0001111q11111111",
                 "qqqqqq1q11111111"
+            ],
+            25:[//marked shoe locker(目印の下駄箱。マップ上の文字は p)
+                "1111111111111111",
+                "1KKKKKKKKKKKKKK1",
+                "1K11111KK11111K1",
+                "1K11111KK11111K1",
+                "1K11111KK11111K1",
+                "1KKKKKKKKKKKKKK1",
+                "1K11111KK11111K1",
+                "1K11111KK11111K1",
+                "1K11111KK11111K1",
+                "1KKKKKKKKKKKKKK1",
+                "1K11111KK11111K1",
+                "1K11111KK11111K1",
+                "1K11111KK11111K1",
+                "1KKKKKKKKKKKKKK1",
+                "1KKKKKKKKKKKKKK1",
+                "1111111111111111"
+            ],
+            26:[//empty frame(空の額縁。マップ上の文字は q)
+                "IIIIIIIIIIIIIIII",
+                "IJJJJJJJJJJJJJJI",
+                "IJ111y11111111JI",
+                "IJy1111111111yJI",
+                "IJ11111111y111JI",
+                "IJ11111y111111JI",
+                "IJ11y111111111JI",
+                "IJ1111111111y1JI",
+                "IJ1111111y1111JI",
+                "IJ1111y1111111JI",
+                "IJ1y1111111111JI",
+                "IJ111111111y11JI",
+                "IJ111111y11111JI",
+                "IJ111y11111111JI",
+                "IJJJJJJJJJJJJJJI",
+                "IIIIIIIIIIIIIIII"
             ]
         };
 
         // 通れないタイル(floor以外)
-        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14,16,17,18,19,20,22,23,24]);
+        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14,16,17,18,19,20,22,23,24,25,26]);
 
         // 触れると反応するタイル(ドア・階段)
-        const touchTiles = new Set([5,7,8,9,16,20,22,23,24]);
+        const touchTiles = new Set([5,7,8,9,16,20,22,23,24,25,26]);
 
         // 1行=1文字1タイルの文字列。縦横のサイズはマップごとに自由
         const mapData = {
@@ -751,11 +853,11 @@
                 "1000001",
                 "1195111"
             ],
-            3:[//hallway 2F(3階と同じ構造。右の壁の上り階段が増える)
+            3:[//hallway 2F(北の端の階段の向かいにロッカー(0,3)。3階と同じ構造。右の壁の上り階段が増える)
                 "1111111",
                 "1000008",
                 "1000008",
-                "1000009",
+                "m000009",
                 "1000007",
                 "1000007",
                 "1000001",
@@ -930,7 +1032,7 @@
                 "50000000000001",
                 "50000000000001",
                 "50000000000001",
-                "1000aaa1000001",
+                "1000apa1000001",
                 "11111111000001",
                 "22222221000001",
                 "22222221000001",
@@ -1095,7 +1197,8 @@
                 "6,27":{message:"階段を上がった。(3階)",toMap:2,x:64,y:448,show:"teacher"},
                 "6,26":{message:"階段を上がった。(3階)",toMap:2,x:64,y:448,show:"teacher"},
                 "6,2":{message:"階段を上がった。(3階)",toMap:2,x:64,y:48},
-                "6,1":{message:"階段を上がった。(3階)",toMap:2,x:64,y:48}
+                "6,1":{message:"階段を上がった。(3階)",toMap:2,x:64,y:48},
+                "0,3":{event:"locker"}
             },
             4:{//1階
                 "0,27":{message:"ドアには鍵がかかっている……",sound:"locked"},
@@ -1151,7 +1254,8 @@
                 "9,60":{message:"外に出た。",sound:"open",toMap:9,x:272,y:752},
                 "10,60":{message:"外に出た。",sound:"open",toMap:9,x:272,y:752},
                 "11,60":{message:"外に出た。",sound:"open",toMap:9,x:272,y:752},
-                "7,53":{event:"locker"}
+                "7,53":{event:"locker"},
+                "5,46":{event:"hintLocker"}
             },
             8:{//職員室
                 "13,3":{message:"廊下に戻った。",sound:"open",toMap:7,x:128,y:224},
@@ -1178,8 +1282,8 @@
             },
             11:{//音楽室
                 "6,0":{message:"廊下に戻った。",sound:"open",toMap:3,x:48,y:768},
-                "11,4":{message:"ピアノ"},
-                "11,5":{message:"ピアノ"},
+                "11,4":{event:"piano"},
+                "11,5":{event:"piano"},
                 "6,10":{message:"肖像画"}
             }
         };
@@ -1315,7 +1419,8 @@
             items:{},
             flags:{},
             frozen:false,
-            hidden:false
+            hidden:false,
+            piano:false
         };
 
         const startState = {
@@ -1560,6 +1665,38 @@
                 this.tone("square",160,40,0,0.5,0.4);
             },
 
+            // ピアノの音(ド〜シ。高めの音域で、小さなスピーカーでも聞こえるように)
+            note(index) {
+                const freq = [523,587,659,698,784,880,988][index];
+                this.tone("triangle",freq,freq*0.98,0,0.6,0.8);
+                this.tone("sine",freq*2,freq*2,0,0.3,0.3);
+            },
+
+            // 不気味な音楽: 半音でゆれる短調の旋律と、ふるえる高い音(約6秒)
+            creepyMusic() {
+                const melody = [523,554,523,494,466,494,523,415,440,415,392,370];
+                melody.forEach((freq,i) => {
+                    this.tone("triangle",freq,freq*0.985,i*0.5,0.7,0.6);
+                    this.tone("sine",freq*1.5,freq*1.5*0.97,i*0.5,0.7,0.25);
+                });
+                for (let i = 0; i < 6; i++) {
+                    this.tone("sawtooth",1200 + i*40,1100 + i*40,i,0.9,0.12);
+                };
+            },
+
+            // 先生が現れる音: 上がっていく叫びのような音
+            sting() {
+                this.tone("sawtooth",220,880,0,0.5,0.6);
+                this.tone("square",330,1100,0,0.5,0.35);
+            },
+
+            // 正解のとき: 上がっていく音
+            fanfare() {
+                [523,659,784,1047].forEach((freq,i) => {
+                    this.tone("triangle",freq,freq,i*0.12,0.3,0.7);
+                });
+            },
+
             // 拾ったとき: 上がる2音
             pickup() {
                 this.tone("square",600,900,0,0.08,0.7);
@@ -1599,13 +1736,13 @@
         const messageBox = document.getElementById("message");
         let messageTimer = null;
 
-        const showMessage = (text) => {
+        const showMessage = (text,duration = 2500) => {
             messageBox.textContent = text;
             messageBox.hidden = false;
             clearTimeout(messageTimer);
             messageTimer = setTimeout(() => {
                 messageBox.hidden = true;
-            },2500);
+            },duration);
         };
 
         const touchDoor = (tiles) => {
@@ -1667,10 +1804,115 @@
             receptionEvent.phase = 3;
         };
 
+        // ピアノのなぞなぞ。メロディはゲームを始めるたび(リスタートも)ランダムに変わる
+        const noteNames = ["ド","レ","ミ","ファ","ソ","ラ","シ"];
+        const pianoKeyMap = {a:0,s:1,d:2,f:3,g:4,h:5,j:6};
+        const puzzle = {
+            melody:[],
+            entered:[]
+        };
+
+        const newMelody = () => {
+            const length = 4 + Math.floor(Math.random()*4);    // 4〜7音
+            const melody = [];
+            while (melody.length < length) {
+                const note = Math.floor(Math.random()*noteNames.length);
+                if (melody.length === 0 || melody[melody.length - 1] !== note) {
+                    melody.push(note);
+                };
+            };
+            puzzle.melody = melody;
+            puzzle.entered = [];
+        };
+
+        const melodyText = (list) => list.map((i) => noteNames[i]).join(" ");
+
+        const pianoPanel = document.getElementById("piano");
+        const pianoInfo = document.getElementById("pianoInfo");
+
+        const updatePianoInfo = (text) => {
+            pianoInfo.textContent = text || (puzzle.entered.length === 0 ? "メモのメロディを弾いてみよう" : melodyText(puzzle.entered));
+        };
+
+        const openPiano = () => {
+            if (gameData.piano) {
+                return;
+            };
+            gameData.piano = true;
+            gameData.frozen = true;
+            puzzle.entered = [];
+            pianoPanel.hidden = false;
+            updatePianoInfo();
+        };
+
+        const closePiano = () => {
+            gameData.piano = false;
+            gameData.frozen = false;
+            pianoPanel.hidden = true;
+        };
+
+        const pressPianoKey = (index) => {
+            if (!gameData.piano) {
+                return;
+            };
+            sound.note(index);
+            puzzle.entered.push(index);
+
+            const position = puzzle.entered.length - 1;
+            if (puzzle.entered[position] !== puzzle.melody[position]) {
+                // 間違えたら最初から
+                sound.locked();
+                puzzle.entered = [];
+                updatePianoInfo("……違う。もう一度");
+                return;
+            };
+            updatePianoInfo();
+
+            if (puzzle.entered.length === puzzle.melody.length) {
+                closePiano();
+                gameData.flags.pianoSolved = true;
+                sound.creepyMusic();
+                showMessage("ピアノから、不気味な音楽が流れ出した……",3000);
+                puzzle.timer = setTimeout(portraitTeacher,2500);
+            };
+        };
+
+        for (let i = 0; i < noteNames.length; i++) {
+            document.getElementById("pk" + i).addEventListener("click",() => pressPianoKey(i));
+        };
+        document.getElementById("pianoClose").addEventListener("click",closePiano);
+
+        document.addEventListener("keydown",(event) => {
+            if (!gameData.piano) {
+                return;
+            };
+            if (event.key === "Escape") {
+                closePiano();
+            } else if (event.key.toLowerCase() in pianoKeyMap) {
+                pressPianoKey(pianoKeyMap[event.key.toLowerCase()]);
+            };
+        });
+
+        newMelody();
+
         const hideTime = 3000;
         let hideTimer = null;
 
         const events = {
+            // 目印の下駄箱: メモにメロディが書いてある
+            hintLocker() {
+                showMessage("靴の中にメモが入っていた。「" + melodyText(puzzle.melody) + "」",7000);
+            },
+
+            // ピアノ: 鍵盤を出す。弾き終えていれば、もう必要ない
+            piano() {
+                if (gameData.flags.pianoSolved) {
+                    showMessage("もう弾く必要はなさそうだ。");
+                    return;
+                };
+                openPiano();
+            },
+
             // 追いかけられていなければ、ヒントだけ。追いかけられていれば、隠れて先生を撒く
             locker() {
                 if (gameData.hidden) {
@@ -1842,17 +2084,32 @@
         };
 
         // 電話の通話が終わったら、壁が壊れてドアが開き、先生が滑り込んでくる
-        const startChase = () => {
+        const startChase = (mapId = 10,tx = 6,ty = 0,slide = 0.16,pause = 0.7) => {
             chaser.active = true;
             chaser.waiting = 0;
-            chaser.mapId = 10;
-            chaser.tx = 6;
-            chaser.ty = 0;
+            chaser.mapId = mapId;
+            chaser.tx = tx;
+            chaser.ty = ty;
             chaser.x = chaser.tx*config.tileSize;
             chaser.y = chaser.ty*config.tileSize;
             chaser.path = [];
-            chaser.slide = 0.16;
-            chaser.pause = 0.7;
+            chaser.slide = slide;
+            chaser.pause = pause;
+        };
+
+        // ピアノの正解のあと: 肖像画が空になり、先生が出てきて追いかけてくる
+        const musicRoom = mapData[11].slice();
+
+        const portraitTeacher = () => {
+            mapData[11][10] = mapData[11][10].slice(0,6) + "q" + mapData[11][10].slice(7);
+            doorData[11]["6,10"] = {message:"空っぽの額縁だ。"};
+            sound.sting();
+            canvas.classList.add("shake");
+            setTimeout(() => {
+                canvas.classList.remove("shake");
+            },500);
+            showMessage("肖像画から、先生が出てきた！");
+            startChase(11,6,9,0,0.9);
         };
 
         const finishCall = () => {
@@ -2030,7 +2287,7 @@
         };
 
         document.addEventListener("pointerdown",(event) => {
-            if (gameData.over || stick.id !== null || event.clientY < window.innerHeight/2) {
+            if (gameData.over || gameData.piano || stick.id !== null || event.clientY < window.innerHeight/2) {
                 return;
             };
             stick.id = event.pointerId;
@@ -2158,6 +2415,8 @@
             });
             gameData.items = {};
             gameData.flags = {};
+            newMelody();
+            closePiano();
             gameData.frozen = false;
             gameData.hidden = false;
             chaser.active = false;
@@ -2167,6 +2426,9 @@
             clearTimeout(receptionEvent.breakTimer);
             receptionEvent.phase = 0;
             mapData[10] = receptionRoom.slice();
+            mapData[11] = musicRoom.slice();
+            doorData[11]["6,10"] = {message:"肖像画"};
+            clearTimeout(puzzle.timer);
             canvas.classList.remove("shake");
             updateItemHud();
             moveRemain = 0;
