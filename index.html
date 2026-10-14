@@ -1381,6 +1381,7 @@
         const itemDefs = {
             receptionKey:{name:"応接室の鍵"},
             musicKey:{name:"音楽室の鍵"},
+            eastKey:{name:"東校舎の鍵"},
             mysteryPaper:{name:() => "謎の紙(" + puzzle.melody.map((i) => noteNames[i]).join(",") + ")"}
         };
 
@@ -1405,7 +1406,12 @@
 
         const musicKeyTex = keyTex.map((row) => row.replace(/3/g,"f"));   // 色違い(水色)の鍵
 
+        const eastKeyTex = keyTex.map((row) => row.replace(/3/g,"r"));   // 赤い鍵
+
         const mapItems = {
+            11:[//音楽室: ピアノの正解のとき中央に現れ、少しして自動で回収される
+                {id:"eastKey",showFlag:"eastKeyShown",auto:true,taken:false,x:96,y:80,w:16,h:16,tex:eastKeyTex}
+            ],
             10:[//応接室: 一度出て戻ると、がれきの所に現れる
                 {id:"musicKey",showFlag:"musicKeyShown",taken:false,x:96,y:16,w:16,h:16,tex:musicKeyTex}
             ],
@@ -1771,7 +1777,7 @@
 
         const checkPickup = () => {
             (mapItems[gameData.mapId] || []).forEach((item) => {
-                if (itemVisible(item) && isNear(player,item,-4)) {
+                if (itemVisible(item) && !item.auto && isNear(player,item,-4)) {
                     item.taken = true;
                     gameData.items[item.id] = true;
                     showMessage(itemDefs[item.id].name + "を手に入れた。");
@@ -1816,7 +1822,8 @@
             melody:[],
             entered:[],
             mistakes:0,
-            timer:null
+            timer:null,
+            timers:[]
         };
         const maxMistakes = 3;
 
@@ -1889,9 +1896,7 @@
             if (puzzle.entered.length === puzzle.melody.length) {
                 closePiano();
                 gameData.flags.pianoSolved = true;
-                sound.creepyMusic();
-                showMessage("ピアノから、不気味な音楽が流れ出した……",3000);
-                puzzle.timer = setTimeout(portraitTeacher,2500);
+                solvedSequence();
             };
         };
 
@@ -2139,6 +2144,47 @@
             },500);
             showMessage("肖像画から、先生が出てきた！");
             startChase(11,6,9,0,0.9);
+        };
+
+        // ピアノの正解のあと: 不気味な音楽 → 東校舎の鍵が現れる → 自動で回収 → 先生が出てくる
+        // それぞれの場面で画面を揺らし、先生が出るまでは動けない(先生が出た瞬間から操作できる)
+        const solvedSequence = () => {
+            const later = (func,ms) => puzzle.timers.push(setTimeout(func,ms));
+            const shake = () => {
+                canvas.classList.add("shake");
+                later(() => {
+                    canvas.classList.remove("shake");
+                },500);
+            };
+
+            gameData.frozen = true;
+
+            sound.creepyMusic();
+            shake();
+            showMessage("ピアノから、不気味な音楽が流れ出した……");
+
+            later(() => {
+                gameData.flags.eastKeyShown = true;
+                sound.sting();
+                shake();
+                showMessage("音楽室の中央に、鍵が現れた……");
+            },1000);
+
+            later(() => {
+                const item = mapItems[11].find((entry) => entry.id === "eastKey");
+                item.taken = true;
+                gameData.items.eastKey = true;
+                updateItemHud();
+                sound.pickup();
+                shake();
+                showMessage("鍵が消えた。「東校舎の鍵」を手に入れた。",2500);
+            },3500);
+
+            // 先生が出た瞬間(画面の揺れは、portraitTeacher の中で入る)から、動けるようになる
+            later(() => {
+                portraitTeacher();
+                gameData.frozen = false;
+            },5000);
         };
 
         const finishCall = () => {
@@ -2465,6 +2511,8 @@
             mapData[11] = musicRoom.slice();
             doorData[11]["6,10"] = {message:"肖像画"};
             clearTimeout(puzzle.timer);
+            puzzle.timers.forEach(clearTimeout);
+            puzzle.timers = [];
             canvas.classList.remove("shake");
             updateItemHud();
             moveRemain = 0;
