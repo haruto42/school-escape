@@ -1281,7 +1281,7 @@
                 "6,5":{message:"電話"}
             },
             11:{//音楽室
-                "6,0":{message:"廊下に戻った。",sound:"open",toMap:3,x:48,y:768},
+                "6,0":{blockedIf:"musicLocked",message:"廊下に戻った。",sound:"open",toMap:3,x:48,y:768},
                 "11,4":{event:"piano"},
                 "11,5":{event:"piano"},
                 "6,10":{message:"肖像画"}
@@ -1380,7 +1380,8 @@
         // 拾える物。マップごとに並べる(taken=trueで消える)
         const itemDefs = {
             receptionKey:{name:"応接室の鍵"},
-            musicKey:{name:"音楽室の鍵"}
+            musicKey:{name:"音楽室の鍵"},
+            mysteryPaper:{name:() => "謎の紙(" + puzzle.melody.map((i) => noteNames[i]).join(",") + ")"}
         };
 
         const keyTex = [//key
@@ -1417,6 +1418,7 @@
             mapId:1,
             over:false,
             items:{},
+            used:{},
             flags:{},
             frozen:false,
             hidden:false,
@@ -1756,7 +1758,10 @@
         const itemHud = document.getElementById("items");
 
         const updateItemHud = () => {
-            const names = Object.keys(gameData.items).map((id) => itemDefs[id].name);
+            const names = Object.keys(gameData.items).filter((id) => !gameData.used[id]).map((id) => {
+                const name = itemDefs[id].name;
+                return typeof name === "function" ? name() : name;
+            });
             itemHud.hidden = names.length === 0;
             itemHud.textContent = "持ち物: " + names.join("、");
         };
@@ -1809,11 +1814,14 @@
         const pianoKeyMap = {a:0,s:1,d:2,f:3,g:4,h:5,j:6};
         const puzzle = {
             melody:[],
-            entered:[]
+            entered:[],
+            mistakes:0,
+            timer:null
         };
+        const maxMistakes = 3;
 
         const newMelody = () => {
-            const length = 4 + Math.floor(Math.random()*4);    // 4〜7音
+            const length = 3;    // 3音
             const melody = [];
             while (melody.length < length) {
                 const note = Math.floor(Math.random()*noteNames.length);
@@ -1823,6 +1831,7 @@
             };
             puzzle.melody = melody;
             puzzle.entered = [];
+            puzzle.mistakes = 0;
         };
 
         const melodyText = (list) => list.map((i) => noteNames[i]).join(" ");
@@ -1831,7 +1840,7 @@
         const pianoInfo = document.getElementById("pianoInfo");
 
         const updatePianoInfo = (text) => {
-            pianoInfo.textContent = text || (puzzle.entered.length === 0 ? "メモのメロディを弾いてみよう" : melodyText(puzzle.entered));
+            pianoInfo.textContent = text || (puzzle.entered.length === 0 ? "謎の紙の音を弾いてみよう" : melodyText(puzzle.entered));
         };
 
         const openPiano = () => {
@@ -1860,10 +1869,19 @@
 
             const position = puzzle.entered.length - 1;
             if (puzzle.entered[position] !== puzzle.melody[position]) {
-                // 間違えたら最初から
+                // 間違えたら最初から。3回間違えると、閉じ込められて先生が出てくる
                 sound.locked();
                 puzzle.entered = [];
-                updatePianoInfo("……違う。もう一度");
+                puzzle.mistakes += 1;
+                if (puzzle.mistakes >= maxMistakes) {
+                    closePiano();
+                    gameData.flags.musicLocked = true;
+                    sound.creepyMusic();
+                    showMessage("ドアが閉まる音がした。出られない……！",3000);
+                    puzzle.timer = setTimeout(portraitTeacher,2500);
+                } else {
+                    updatePianoInfo("……違う。あと" + (maxMistakes - puzzle.mistakes) + "回");
+                };
                 return;
             };
             updatePianoInfo();
@@ -1901,11 +1919,22 @@
         const events = {
             // 目印の下駄箱: メモにメロディが書いてある
             hintLocker() {
-                showMessage("靴の中にメモが入っていた。「" + melodyText(puzzle.melody) + "」",7000);
+                if (gameData.items.mysteryPaper) {
+                    showMessage("謎の紙は、もう持っている。");
+                    return;
+                };
+                gameData.items.mysteryPaper = true;
+                updateItemHud();
+                sound.pickup();
+                showMessage("靴の中に、謎の紙が入っていた。持ち物を見てみよう。",4000);
             },
 
             // ピアノ: 鍵盤を出す。弾き終えていれば、もう必要ない
             piano() {
+                if (gameData.flags.musicLocked) {
+                    showMessage("弾いている場合じゃない！");
+                    return;
+                };
                 if (gameData.flags.pianoSolved) {
                     showMessage("もう弾く必要はなさそうだ。");
                     return;
@@ -2165,6 +2194,12 @@
                 return;
             };
 
+            // 鍵を使ったら持ち物欄からは消す。内部的には持ったままなので、その後も出入りできる
+            if (data.requires && !gameData.used[data.requires]) {
+                gameData.used[data.requires] = true;
+                updateItemHud();
+            };
+
             if (data.message) {
                 showMessage(data.message);
             };
@@ -2414,6 +2449,7 @@
                 item.taken = false;
             });
             gameData.items = {};
+            gameData.used = {};
             gameData.flags = {};
             newMelody();
             closePiano();
