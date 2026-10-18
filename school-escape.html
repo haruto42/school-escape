@@ -97,6 +97,35 @@
             cursor: pointer;
         }
 
+        #cheat {
+            position: fixed;
+            top: 8px;
+            right: 8px;
+            z-index: 20;
+            width: 220px;
+            padding: 8px;
+            border: 1px solid #ffffff;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.88);
+            color: #ffffff;
+            font-size: 13px;
+        }
+
+        #cheat select, #cheat button {
+            margin: 2px 0;
+            font-size: 13px;
+        }
+
+        #cheat select {
+            width: 100%;
+        }
+
+        #cheatItems button {
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
+
         #items {
             position: fixed;
             top: 6px;
@@ -212,6 +241,15 @@
         </div>
         <button id="pianoClose">やめる</button>
     </div>
+    <div id="cheat" hidden>
+        <div>【デバッグ】移動</div>
+        <select id="cheatMap"></select>
+        <button id="cheatWarp">移動</button>
+        <div>【デバッグ】アイテムをもらう</div>
+        <div id="cheatItems"></div>
+        <button id="cheatClear">持ち物を空にする</button>
+        <button id="cheatClose">閉じる</button>
+    </div>
     <div id="items" hidden></div>
     <div id="message" hidden></div>
     <div id="gameOver">
@@ -256,6 +294,11 @@
             H:"#13193d",//肖像画の色
             I:"#4a2f14",//額縁(外側)
             K:"#e0b46a",//目印の下駄箱(明るい木)
+            L:"#9b59b6",//紫の液体
+            M:"#ff7a1a",//炎(外側)
+            N:"#ffd23a",//炎(内側)
+            O:"#d6eef5",//ガラス
+            P:"#7a7f88",//金属
             J:"#c9a227",//額縁(内側)
             f:"#8fd0f5",//窓ガラス
             g:"#c8c8c8",//階段(上段)
@@ -842,14 +885,104 @@
                 "JKddffjj33KKddfJ",
                 "JKddffjj33KKddfJ",
                 "JJJJJJJJJJJJJJJJ"
+            ],
+            31:[//flask desk(教卓の液体X。マップ上の文字は v)
+                "8888888888888888",
+                "8888888888888888",
+                "8111111OO1111118",
+                "81bbbbbOObbbbb18",
+                "81bbbbbOObbbbb18",
+                "81bbb111111bbb18",
+                "81bbb1LLLL1bbb18",
+                "811111LLLL111118",
+                "888181LLLL181888",
+                "8881811111181888",
+                "8881888888881888",
+                "8881888888881888",
+                "8881888888881888",
+                "8881888888881888",
+                "8888888888888888",
+                "8888888888888888"
+            ],
+            32:[//lab shelf(理科の道具。マップ上の文字は w)
+                "eeeeeeeeeeeeeeee",
+                "ebbbbbbbbbbbbbbe",
+                "ebbbbbbbbbbbbbbe",
+                "ebbbbbbbbbbbbbbe",
+                "eb111111111111be",
+                "eb1OO11LL11OO1be",
+                "eb1OO11LL11OO1be",
+                "eb1OO11LL11OO1be",
+                "eb1OO11LL11OO1be",
+                "eb1OO11LL11OO1be",
+                "eb1OO11LL11OO1be",
+                "eb1OO11LL11OO1be",
+                "eb111111111111be",
+                "ebbbbbbbbbbbbbbe",
+                "ebbbbbbbbbbbbbbe",
+                "eeeeeeeeeeeeeeee"
+            ],
+            33:[//key mold(鍵の型。マップ上の文字は x)
+                "eeeeeeeeeeeeeeee",
+                "ebbbbbbbbbbbbbbe",
+                "ebbbbbbbbbbbbbbe",
+                "ebbbbbbbbbbbbbbe",
+                "ebPPPPPPPPPPPPbe",
+                "ebPPPPPPPPPPPPbe",
+                "ebP111PPPPPPPPbe",
+                "ebP111111111PPbe",
+                "ebP111111111PPbe",
+                "ebP111PPP1P1PPbe",
+                "ebPPPPPPP1P1PPbe",
+                "ebPPPPPPPPPPPPbe",
+                "ebbbbbbbbbbbbbbe",
+                "ebbbbbbbbbbbbbbe",
+                "ebbbbbbbbbbbbbbe",
+                "eeeeeeeeeeeeeeee"
+            ],
+            34:[//soft metal(柔らかい金属。マップ上の文字は y)
+                "eeeeeeeeeeeeeeee",
+                "ebbbbbbbbbbbbbbe",
+                "ebbbbbbbbbbbbbbe",
+                "ebbbbbPPPPbbbbbe",
+                "ebbbbbPPPPbbbbbe",
+                "ebbbbbPPPPbbbbbe",
+                "ebb1111111111bbe",
+                "ebb1PPPPPPPP1bbe",
+                "ebb1PPPPPPPP1bbe",
+                "ebb1PPPPPPPP1bbe",
+                "ebb1PPPPPPPP1bbe",
+                "ebb1PPPPPPPP1bbe",
+                "ebb1111111111bbe",
+                "ebbbbbbbbbbbbbbe",
+                "ebbbbbbbbbbbbbbe",
+                "eeeeeeeeeeeeeeee"
+            ],
+            35:[//gas burner desk(着火済みガスバーナー。マップ上の文字は z)
+                "8888888888888888",
+                "8888888888888888",
+                "8111111111111118",
+                "81bbbbbbbbbbbb18",
+                "81bbbbMMMMbbbb18",
+                "81bbbbMMMMbbbb18",
+                "81bbbbMNNMbbbb18",
+                "811111MNNM111118",
+                "888188MNNM881888",
+                "888188PPPP881888",
+                "888188PPPP881888",
+                "888188PPPP881888",
+                "8881888888881888",
+                "8881888888881888",
+                "8888888888888888",
+                "8888888888888888"
             ]
         };
 
         // 通れないタイル(floor以外)
-        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14,16,17,18,19,20,22,23,24,25,26,27,28,29,30]);
+        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14,16,17,18,19,20,22,23,24,25,26,27,28,29,30,31,32,33,34,35]);
 
         // 触れると反応するタイル(ドア・階段)
-        const touchTiles = new Set([5,7,8,9,16,20,22,23,24,25,26,29,30]);
+        const touchTiles = new Set([5,7,8,9,16,20,22,23,24,25,26,29,30,31,33,34,35]);
 
         // 1行=1文字1タイルの文字列。縦横のサイズはマップごとに自由
         const mapData = {
@@ -1301,16 +1434,21 @@
                 "1000001",
                 "1111111"
             ],
-            15:[//第一理科室(中は仮の空の部屋)。南の壁(5,8)のドアから廊下へ
-                "11111111111",
-                "10000000001",
-                "10000000001",
-                "10000000001",
-                "10000000001",
-                "10000000001",
-                "10000000001",
-                "10000000001",
-                "11111511111"
+            15:[//第一理科室。上が黒板、机を並べる。出入口は下の辺の左(2,13)。教卓(6,2)に液体X、後ろの左(5,12)に柔らかい金属、右(9,12)に鍵の型、真ん中の机(5,7)に着火済みバーナー
+                "11111111111111",
+                "10044444444001",
+                "100003v3300001",
+                "10000000000001",
+                "10000000000001",
+                "10300300300301",
+                "10000000000001",
+                "10300z00300301",
+                "10000000000001",
+                "10300300300301",
+                "10000000000001",
+                "10000000000001",
+                "1000wyw0wxww01",
+                "11511111111111"
             ]
         };
 
@@ -1461,15 +1599,19 @@
                 "4,0":{message:"外に出た。",sound:"open",toMap:9,x:288,y:816}
             },
             14:{//3年校舎2階の廊下
-                "3,0":{requires:"scienceKey1",message:"鍵を開けて、第一理科室に入った。",sound:"open",toMap:15,x:80,y:96},
+                "3,0":{requires:"scienceKey1",message:"鍵を開けて、第一理科室に入った。",sound:"open",toMap:15,x:32,y:192},
                 "2,0":{message:"第一理科室"},
                 "6,7":{message:"階段を降りた。(3年校舎1階)",toMap:7,x:192,y:144},
                 "6,8":{message:"階段を降りた。(3年校舎1階)",toMap:7,x:192,y:144},
                 "6,43":{message:"階段を降りた。(3年校舎1階)",toMap:7,x:192,y:720},
                 "6,44":{message:"階段を降りた。(3年校舎1階)",toMap:7,x:192,y:720}
             },
-            15:{//第一理科室(仮)
-                "5,8":{message:"廊下に戻った。",sound:"open",toMap:14,x:48,y:16}
+            15:{//第一理科室
+                "2,13":{message:"廊下に戻った。",sound:"open",toMap:14,x:48,y:16},
+                "6,2":{event:"liquidX"},
+                "9,12":{event:"keyMold"},
+                "5,12":{event:"softMetal"},
+                "5,7":{event:"burner"}
             }
         };
 
@@ -1570,6 +1712,10 @@
             libraryKey:{name:"図書室の鍵"},
             secretBook:{name:"秘伝の書"},
             scienceKey1:{name:"第一理科室の鍵"},
+            liquidX:{name:"謎の液体X"},
+            keyMold:{name:"鍵の型"},
+            softMetal:{name:"柔らかい金属"},
+            scienceKey2:{name:"第二理科室の鍵"},
             mysteryPaper:{name:() => "謎の紙(" + puzzle.melody.map((i) => noteNames[i]).join(",") + ")"}
         };
 
@@ -1946,10 +2092,26 @@
             },duration);
         };
 
+        // 押し付け続けている間は、最初の1回だけ反応する。この時間より長く離れてから触れ直すと、また反応する
+        const touchRearm = 250;
+        const touchHold = {
+            key:null,
+            time:0
+        };
+
         const touchDoor = (tiles) => {
             const door = tiles.find((tile) => touchTiles.has(tile.id));
             const data = door && (doorData[gameData.mapId] || {})[door.x + "," + door.y];
-            if (data) {
+            if (!data) {
+                return;
+            };
+
+            const key = gameData.mapId + ":" + door.x + "," + door.y;
+            const now = performance.now();
+            const held = touchHold.key === key && now - touchHold.time < touchRearm;
+            touchHold.key = key;
+            touchHold.time = now;
+            if (!held) {
                 runAction(data);
             };
         };
@@ -2120,7 +2282,87 @@
             "保健室で「謎の薬Z」とまぜ合わせると、強い薬ができる。"
         ].join("\n");
 
+        // 第一理科室: フラスコ・鍵の型・柔らかい金属を取ったら、普通の机・棚の絵に変える
+        const labRoom = mapData[15].slice();
+
+        const setLabTile = (x,y,tile) => {
+            const row = mapData[15][y];
+            mapData[15][y] = row.slice(0,x) + tile + row.slice(x + 1);
+        };
+
+        const syncLab = () => {
+            if (gameData.flags.takenLiquidX) {
+                setLabTile(6,2,"3");
+            };
+            if (gameData.flags.takenKeyMold) {
+                setLabTile(9,12,"w");
+            };
+            if (gameData.flags.takenSoftMetal) {
+                setLabTile(5,12,"w");
+            };
+        };
+
         const events = {
+            // 第一理科室: 教卓のフラスコ(謎の液体X)
+            liquidX() {
+                if (gameData.items.liquidX) {
+                    showMessage("もう何もない。");
+                    return;
+                };
+                gameData.items.liquidX = true;
+                gameData.flags.takenLiquidX = true;
+                syncLab();
+                updateItemHud();
+                sound.pickup();
+                showMessage("教卓の上に、紫の液体が入ったフラスコがある。「謎の液体X」を手に入れた。",3500);
+            },
+
+            // 第一理科室: 後ろの右の棚(鍵の型)
+            keyMold() {
+                if (gameData.items.keyMold || gameData.items.scienceKey2) {
+                    showMessage("もう何もない。");
+                    return;
+                };
+                gameData.items.keyMold = true;
+                gameData.flags.takenKeyMold = true;
+                syncLab();
+                updateItemHud();
+                sound.pickup();
+                showMessage("鍵の形のくぼみがある型だ。「鍵の型」を手に入れた。",3000);
+            },
+
+            // 第一理科室: 後ろの左の棚(柔らかい金属)
+            softMetal() {
+                if (gameData.items.softMetal || gameData.items.scienceKey2) {
+                    showMessage("もう何もない。");
+                    return;
+                };
+                gameData.items.softMetal = true;
+                gameData.flags.takenSoftMetal = true;
+                syncLab();
+                updateItemHud();
+                sound.pickup();
+                showMessage("やわらかく、すぐ溶けそうな金属だ。「柔らかい金属」を手に入れた。",3000);
+            },
+
+            // 第一理科室: 着火済みガスバーナー。型と金属を持っていると、第二理科室の鍵ができる
+            burner() {
+                if (gameData.items.scienceKey2) {
+                    showMessage("もう用はない。火のついたガスバーナーだ。");
+                    return;
+                };
+                if (gameData.items.keyMold && gameData.items.softMetal) {
+                    delete gameData.items.keyMold;
+                    delete gameData.items.softMetal;
+                    gameData.items.scienceKey2 = true;
+                    updateItemHud();
+                    sound.pickup();
+                    showMessage("金属をバーナーで溶かして、型に流し込んだ。「第二理科室の鍵」を手に入れた。",4500);
+                    return;
+                };
+                showMessage("火のついたガスバーナーだ。金属を溶かせそうだ。");
+            },
+
             // 図書室の、色を強めにした本棚: 本の間に第一理科室の鍵が挟まっている
             scienceKeyShelf() {
                 if (gameData.items.scienceKey1) {
@@ -2745,6 +2987,7 @@
             receptionEvent.phase = 0;
             mapData[10] = receptionRoom.slice();
             mapData[11] = musicRoom.slice();
+            mapData[15] = labRoom.slice();
             doorData[11]["6,10"] = {message:"肖像画"};
             clearTimeout(puzzle.timer);
             puzzle.timers.forEach(clearTimeout);
@@ -2776,7 +3019,7 @@
             12:[10,1],
             13:[3,1],
             14:[3,1],
-            15:[5,6]
+            15:[2,12]
         };
 
         const warp = (mapId,tx,ty) => {
@@ -2797,6 +3040,94 @@
             if (isColliding(player)) {
                 console.log("そこは壁の中です。別の位置を指定してください");
             };
+        };
+
+        // 【一時的・配布前に削除】デバッグ用: F12のコンソールで cheat() と入力すると、移動とアイテムの付与ができる簡易パネルが出る
+        // コンソールから直接 give("musicKey") のようにも使える
+        const mapNames = {
+            1:"教室(3階)",
+            2:"3階の廊下",
+            3:"2階の廊下",
+            4:"1階の廊下",
+            5:"校庭(草の広場)",
+            6:"渡り廊下(T字)",
+            7:"3年校舎1階の廊下",
+            8:"職員室",
+            9:"外(石畳・正門)",
+            10:"応接室",
+            11:"音楽室",
+            12:"図書室",
+            13:"東校舎",
+            14:"3年校舎2階の廊下",
+            15:"第一理科室"
+        };
+
+        const cheatPanel = document.getElementById("cheat");
+        const cheatSelect = document.getElementById("cheatMap");
+        const cheatItemList = document.getElementById("cheatItems");
+        let cheatBuilt = false;
+
+        // 操作したあとはフォーカスを外す(開いたままでも、矢印キーでプレイヤーを動かせるように)
+        const blurActive = () => {
+            const element = document.activeElement;
+            if (element && element.blur) {
+                element.blur();
+            };
+        };
+
+        const give = (id) => {
+            if (!itemDefs[id]) {
+                console.log("アイテムIDは次のとおり: " + Object.keys(itemDefs).join(", "));
+                return;
+            };
+            gameData.items[id] = true;
+            delete gameData.used[id];
+            const labFlags = {liquidX:"takenLiquidX",keyMold:"takenKeyMold",softMetal:"takenSoftMetal"};
+            if (labFlags[id]) {
+                gameData.flags[labFlags[id]] = true;
+                syncLab();
+            };
+            Object.values(mapItems).flat().filter((item) => item.id === id).forEach((item) => {
+                item.taken = true;
+            });
+            updateItemHud();
+        };
+
+        const cheat = () => {
+            if (!cheatBuilt) {
+                cheatBuilt = true;
+                for (const id in mapNames) {
+                    const option = document.createElement("option");
+                    option.value = id;
+                    option.textContent = id + ": " + mapNames[id];
+                    cheatSelect.appendChild(option);
+                };
+                for (const id in itemDefs) {
+                    const button = document.createElement("button");
+                    const name = itemDefs[id].name;
+                    button.textContent = typeof name === "function" ? name() : name;
+                    button.addEventListener("click",() => {
+                        give(id);
+                        blurActive();
+                    });
+                    cheatItemList.appendChild(button);
+                };
+                document.getElementById("cheatWarp").addEventListener("click",() => {
+                    warp(Number(cheatSelect.value));
+                    blurActive();
+                });
+                document.getElementById("cheatClear").addEventListener("click",() => {
+                    gameData.items = {};
+                    gameData.used = {};
+                    updateItemHud();
+                    blurActive();
+                });
+                document.getElementById("cheatClose").addEventListener("click",cheat);
+                cheatSelect.addEventListener("change",blurActive);
+                // パネルの操作で、プレイヤーのスティックが動かないようにする
+                cheatPanel.addEventListener("pointerdown",(event) => event.stopPropagation());
+            };
+            cheatPanel.hidden = !cheatPanel.hidden;
         };
 
         let lastTime = null;
