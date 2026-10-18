@@ -126,6 +126,64 @@
             text-align: left;
         }
 
+        #lever {
+            position: fixed;
+            bottom: 3%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            width: min(94vw, 560px);
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.88);
+            color: #ffffff;
+            text-align: center;
+            font-size: min(3.8vw, 16px);
+        }
+
+        #leverBeam {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            margin: 34px 0;
+            transform-origin: center;
+            transition: transform 0.3s;
+        }
+
+        .leverSpot {
+            width: min(9vw, 44px);
+            height: min(9vw, 44px);
+            line-height: min(9vw, 44px);
+            border: 2px solid #888888;
+            border-radius: 4px;
+            background: #3a2a14;
+            font-size: min(5vw, 22px);
+        }
+
+        button.leverSpot {
+            border-color: #ffffff;
+            background: #7a5a2a;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        #leverPivot {
+            width: min(9vw, 44px);
+            font-size: min(7vw, 30px);
+        }
+
+        #leverClose {
+            margin-top: 6px;
+            padding: 4px 18px;
+            border: 2px solid #ffffff;
+            border-radius: 6px;
+            background: #000000;
+            color: #ffffff;
+            font-size: min(3.6vw, 16px);
+            cursor: pointer;
+        }
+
         #items {
             position: fixed;
             top: 6px;
@@ -205,6 +263,54 @@
             text-align: center;
         }
 
+        #clearScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            background: #ffffff;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 2s;
+        }
+
+        #clearScreen.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #clearText {
+            color: #f5b800;
+            font-size: min(10vw, 56px);
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 14px #ffe680;
+        }
+
+        #clearReason {
+            max-width: 90vw;
+            color: #b8860b;
+            font-size: min(4.5vw, 22px);
+            text-align: center;
+        }
+
+        #clearAgain {
+            padding: 10px 36px;
+            border: 3px solid #f5b800;
+            background: #ffffff;
+            color: #b8860b;
+            font-size: min(6vw, 28px);
+            cursor: pointer;
+        }
+
+        #clearAgain:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+
         #againButton {
             padding: 10px 36px;
             border: 3px solid #ffffff;
@@ -250,12 +356,35 @@
         <button id="cheatClear">持ち物を空にする</button>
         <button id="cheatClose">閉じる</button>
     </div>
+    <div id="lever" hidden>
+        <div id="leverInfo"></div>
+        <div id="leverBeam">
+            <div class="leverSpot" id="ll5">・</div>
+            <div class="leverSpot" id="ll4">・</div>
+            <div class="leverSpot" id="ll3">・</div>
+            <div class="leverSpot" id="ll2">・</div>
+            <div class="leverSpot" id="ll1">・</div>
+            <div id="leverPivot">▲</div>
+            <button class="leverSpot" id="lr1">・</button>
+            <button class="leverSpot" id="lr2">・</button>
+            <button class="leverSpot" id="lr3">・</button>
+            <button class="leverSpot" id="lr4">・</button>
+            <button class="leverSpot" id="lr5">・</button>
+        </div>
+        <div id="leverStatus"></div>
+        <button id="leverClose">やめる</button>
+    </div>
     <div id="items" hidden></div>
     <div id="message" hidden></div>
     <div id="gameOver">
         <div id="gameOverText">GAME OVER</div>
         <div id="gameOverReason"></div>
         <button id="againButton" disabled>again</button>
+    </div>
+    <div id="clearScreen">
+        <div id="clearText">ESCAPE CLEAR!</div>
+        <div id="clearReason">先生を倒し、正門から学校を脱出した！</div>
+        <button id="clearAgain" disabled>もう一度</button>
     </div>
     <div id="stickBase" class="stick" hidden></div>
     <div id="stickKnob" class="stick" hidden></div>
@@ -299,6 +428,7 @@
             N:"#ffd23a",//炎(内側)
             O:"#d6eef5",//ガラス
             P:"#7a7f88",//金属
+            Q:"#3a8fd9",//青い液体
             J:"#c9a227",//額縁(内側)
             f:"#8fd0f5",//窓ガラス
             g:"#c8c8c8",//階段(上段)
@@ -975,14 +1105,140 @@
                 "8881888888881888",
                 "8888888888888888",
                 "8888888888888888"
+            ],
+            36:[//blackboard right(右の壁の黒板=黒板を90度回転。マップ上の文字は A)
+                "888eeccccccccee8",
+                "888eeccccccccee8",
+                "888eeccccccccee8",
+                "888eecc0cccccee8",
+                "888eecc0cccccee8",
+                "888eeccccccccee8",
+                "888eeccccc0ccee8",
+                "888eeccccc0ccee8",
+                "888eeccccccccee8",
+                "888eeccccccccee8",
+                "888eeccccccccee8",
+                "888eecccc0cccee8",
+                "888eecccc0cccee8",
+                "888eeccccccccee8",
+                "888eeccccccccee8",
+                "888eeccccccccee8"
+            ],
+            37:[//lever(てこ。マップ上の文字は B)
+                "8888888888888888",
+                "8888888888888888",
+                "8811118888888888",
+                "881PP18888811188",
+                "881PP1888881P188",
+                "881PP1888881P188",
+                "8111111111111118",
+                "8bbbbbbbbbbbbbb8",
+                "8bbbbbbbbbbbbbb8",
+                "8111111PP1111118",
+                "888888PPPP888888",
+                "88888PPPPPP88888",
+                "8888PPPPPPPP8888",
+                "888PPPPPPPPPP888",
+                "88PPPPPPPPPPPP88",
+                "8888888888888888"
+            ],
+            38:[//flask desk Y(教卓の謎の液体Y。マップ上の文字は C)
+                "8888888888888888",
+                "8888888888888888",
+                "8111111OO1111118",
+                "81bbbbbOObbbbb18",
+                "81bbbbbOObbbbb18",
+                "81bbb111111bbb18",
+                "81bbb1QQQQ1bbb18",
+                "811111QQQQ111118",
+                "888181QQQQ181888",
+                "8881811111181888",
+                "8881888888881888",
+                "8881888888881888",
+                "8881888888881888",
+                "8881888888881888",
+                "8888888888888888",
+                "8888888888888888"
+            ],
+            39:[//bed head(ベッドの枕側。マップ上の文字は D)
+                "8888888888888888",
+                "8888888888888888",
+                "8111111111111111",
+                "8100000fffffffff",
+                "8100000fffffffff",
+                "8100000fffffffff",
+                "8100000fffffffff",
+                "8100000fffffffff",
+                "8100000fffffffff",
+                "8100000fffffffff",
+                "8100000fffffffff",
+                "8111111111111111",
+                "8118888888888888",
+                "8118888888888888",
+                "8888888888888888",
+                "8888888888888888"
+            ],
+            40:[//bed foot(ベッドの足側。マップ上の文字は E)
+                "8888888888888888",
+                "8888888888888888",
+                "1111111111111118",
+                "ffffffffffffff18",
+                "ffffffffffffff18",
+                "ffffffffffffff18",
+                "ffffffffffffff18",
+                "ffffffffffffff18",
+                "ffffffffffffff18",
+                "ffffffffffffff18",
+                "ffffffffffffff18",
+                "1111111111111118",
+                "8888888888881188",
+                "8888888888881188",
+                "8888888888888888",
+                "8888888888888888"
+            ],
+            41:[//mixing tools(薬を混ぜる道具。マップ上の文字は F)
+                "8888888888888888",
+                "8888888888888888",
+                "8111111111111118",
+                "81bbbOOObbbPPb18",
+                "81bbbOLObbbPPb18",
+                "81bbbOOObbbPPb18",
+                "81bbbbbbbbbbbb18",
+                "8111111111111118",
+                "8881888888881888",
+                "8881888888881888",
+                "8881888888881888",
+                "8881888888881888",
+                "8881888888881888",
+                "8881888888881888",
+                "8888888888888888",
+                "8888888888888888"
+            ],
+            42:[//flask desk Z(机の謎の薬Z。マップ上の文字は G)
+                "8888888888888888",
+                "8888888888888888",
+                "8111111OO1111118",
+                "81bbbbbOObbbbb18",
+                "81bbbbbOObbbbb18",
+                "81bbb111111bbb18",
+                "81bbb1jjjj1bbb18",
+                "811111jjjj111118",
+                "888181jjjj181888",
+                "8881811111181888",
+                "8881888888881888",
+                "8881888888881888",
+                "8881888888881888",
+                "8881888888881888",
+                "8888888888888888",
+                "8888888888888888"
             ]
         };
 
         // 通れないタイル(floor以外)
-        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14,16,17,18,19,20,22,23,24,25,26,27,28,29,30,31,32,33,34,35]);
+        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14,16,17,18,19,20,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42]);
 
         // 触れると反応するタイル(ドア・階段)
-        const touchTiles = new Set([5,7,8,9,16,20,22,23,24,25,26,29,30,31,33,34,35]);
+        const touchTiles = new Set([5,7,8,9,16,20,22,23,24,25,26,29,30,31,33,34,35,37,38,41,42]);
 
         // 1行=1文字1タイルの文字列。縦横のサイズはマップごとに自由
         const mapData = {
@@ -1449,6 +1705,36 @@
                 "10000000000001",
                 "1000wyw0wxww01",
                 "11511111111111"
+            ],
+            16:[//第二理科室(第一理科室を右へ90度回した造り)。黒板は右の壁(c12)、教卓(c11)の(11,6)に液体Y、真ん中(6,6)にてこ。ドアは上の辺の黒板側(11,0)
+                "11111111111511",
+                "10000000000001",
+                "10003030300001",
+                "100000000000A1",
+                "100030303000A1",
+                "100000000003A1",
+                "100000B0000CA1",
+                "100000000003A1",
+                "100030303003A1",
+                "100000000000A1",
+                "100030303000A1",
+                "10000000000001",
+                "10000000000001",
+                "11111111111111"
+            ],
+            17:[//保健室(ハーフサイズ)。ドアは東の壁の行2と行9。上に道具(c6-7,行1)、真ん中の机(c5-8,行5)の(6,5)に謎の薬Z、下にベッド
+                "11111111111111",
+                "1wwwwwFFwwwww1",
+                "10000000000005",
+                "10000000000001",
+                "10000000000001",
+                "100003G3300001",
+                "10000000000001",
+                "10000000000001",
+                "10000000000001",
+                "10000000000005",
+                "10DE0DE0DE0001",
+                "11111111111111"
             ]
         };
 
@@ -1459,7 +1745,7 @@
                 "13,16":{message:"鍵を開けて、外に出た。",sound:"open",toMap:2,x:16,y:752}
             },
             2:{
-                "3,49":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "3,49":{requires:"scienceKey2",message:"鍵を開けて、第二理科室に入った。",sound:"open",toMap:16,x:176,y:16},
                 "6,28":{message:"3階"},
                 "6,3":{message:"3階"},
                 "2,49":{message:"第二理科室"},
@@ -1543,8 +1829,8 @@
                 "7,38":{requires:"receptionKey",event:"receptionStart",message:"鍵を開けて、応接室に入った。",sound:"open",toMap:10,x:192,y:144},
                 "7,32":{message:"応接室"},
                 "7,37":{message:"応接室"},
-                "7,50":{message:"ドアには鍵がかかっている……",sound:"locked"},
-                "7,57":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "7,50":{requires:"nurseKey",message:"鍵を開けて、保健室に入った。",sound:"open",toMap:17,x:192,y:32},
+                "7,57":{requires:"nurseKey",message:"鍵を開けて、保健室に入った。",sound:"open",toMap:17,x:192,y:144},
                 "7,51":{message:"保健室"},
                 "7,56":{message:"保健室"},
                 "0,43":{message:"外に出た。",sound:"open",toMap:9,x:224,y:640},
@@ -1612,6 +1898,18 @@
                 "9,12":{event:"keyMold"},
                 "5,12":{event:"softMetal"},
                 "5,7":{event:"burner"}
+            },
+            16:{//第二理科室
+                "11,0":{message:"廊下に戻った。",sound:"open",toMap:2,x:48,y:768},
+                "11,6":{event:"liquidY"},
+                "6,6":{event:"lever"}
+            },
+            17:{//保健室
+                "13,2":{message:"廊下に戻った。",sound:"open",toMap:7,x:128,y:800},
+                "13,9":{message:"廊下に戻った。",sound:"open",toMap:7,x:128,y:912},
+                "6,5":{event:"medicineZ"},
+                "6,1":{event:"mixTools"},
+                "7,1":{event:"mixTools"}
             }
         };
 
@@ -1716,6 +2014,10 @@
             keyMold:{name:"鍵の型"},
             softMetal:{name:"柔らかい金属"},
             scienceKey2:{name:"第二理科室の鍵"},
+            liquidY:{name:"謎の液体Y"},
+            nurseKey:{name:"保健室の鍵"},
+            medicineZ:{name:"謎の薬Z"},
+            poisonSP:{name:"強力な毒液SP"},
             mysteryPaper:{name:() => "謎の紙(" + puzzle.melody.map((i) => noteNames[i]).join(",") + ")"}
         };
 
@@ -1767,7 +2069,8 @@
             flags:{},
             frozen:false,
             hidden:false,
-            piano:false
+            piano:false,
+            lever:false
         };
 
         const startState = {
@@ -1822,13 +2125,16 @@
             });
         };
 
+        // マップの1文字を、タイル番号に直す(0-9 → 0-9、a-z → 10-35、A-Z → 36-61)
+        const tileChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
         // マップ外は壁として扱う
         const getTile = (tx,ty) => {
             const row = mapData[gameData.mapId][ty];
             if (row === undefined || tx < 0 || tx >= row.length) {
                 return 1;
             };
-            return parseInt(row[tx],36);
+            return tileChars.indexOf(row[tx]);
         };
 
         const updateCamera = () => {
@@ -1858,7 +2164,7 @@
             for (let ty = startY; ty < endY && ty < map.length; ty++) {
                 for (let tx = startX; tx < endX && tx < map[ty].length; tx++) {
                     ctx.drawImage(
-                        tileTextures[parseInt(map[ty][tx],36)],
+                        tileTextures[tileChars.indexOf(map[ty][tx])],
                         tx*size - camera.x,
                         ty*size - camera.y
                     );
@@ -2041,6 +2347,17 @@
             fanfare() {
                 [523,659,784,1047].forEach((freq,i) => {
                     this.tone("triangle",freq,freq,i*0.12,0.3,0.7);
+                });
+            },
+
+            // クリア: 明るく上がっていく和音
+            clear() {
+                [523,659,784,1047,1319,1568].forEach((freq,i) => {
+                    this.tone("triangle",freq,freq,i*0.15,0.35,0.7);
+                    this.tone("square",freq*2,freq*2,i*0.15,0.15,0.25);
+                });
+                [523,659,784,1047].forEach((freq) => {
+                    this.tone("triangle",freq,freq,1.0,1.2,0.5);
                 });
             },
 
@@ -2282,6 +2599,148 @@
             "保健室で「謎の薬Z」とまぜ合わせると、強い薬ができる。"
         ].join("\n");
 
+        // てこのパズル。左に固定のおもり、右の5か所に手持ちのおもりを置いて、回す力(おもり×支点からの距離)を釣り合わせる
+        // 左のおもりは、ゲームを始めるたび(リスタートも)に変わる。必ず解ける組み合わせだけを出す
+        const leverWeights = [1,2,3,4];
+        const leverSlots = 5;
+        const lever = {
+            leftWeight:0,
+            leftDistance:0,
+            right:[0,0,0,0,0],
+            timer:null
+        };
+
+        const leverSolvable = (target) => {
+            // 4つのおもりを、5か所のどこかに置く(置かない場合も含む)全ての組み合わせを調べる
+            const search = (index,used,sum) => {
+                if (sum > target) {
+                    return false;
+                };
+                if (index === leverWeights.length) {
+                    return sum === target;
+                };
+                if (search(index + 1,used,sum)) {
+                    return true;
+                };
+                for (let slot = 1; slot <= leverSlots; slot++) {
+                    if (!used.includes(slot) && search(index + 1,used.concat(slot),sum + leverWeights[index]*slot)) {
+                        return true;
+                    };
+                };
+                return false;
+            };
+            return search(0,[],0);
+        };
+
+        const newLever = () => {
+            for (;;) {
+                const weight = 4 + Math.floor(Math.random()*5);       // 4〜8
+                const distance = 2 + Math.floor(Math.random()*3);     // 2〜4
+                if (leverSolvable(weight*distance)) {
+                    lever.leftWeight = weight;
+                    lever.leftDistance = distance;
+                    break;
+                };
+            };
+            lever.right = [0,0,0,0,0];
+        };
+
+        const leverLeftTorque = () => lever.leftWeight*lever.leftDistance;
+        const leverRightTorque = () => lever.right.reduce((sum,weight,i) => sum + weight*(i + 1),0);
+
+        const leverPanel = document.getElementById("lever");
+        const leverBeam = document.getElementById("leverBeam");
+
+        const updateLever = () => {
+            const left = leverLeftTorque();
+            const right = leverRightTorque();
+            for (let d = 1; d <= leverSlots; d++) {
+                document.getElementById("ll" + d).textContent = d === lever.leftDistance ? String(lever.leftWeight) : "・";
+                document.getElementById("lr" + d).textContent = lever.right[d - 1] ? String(lever.right[d - 1]) : "・";
+            };
+            const free = leverWeights.filter((w) => !lever.right.includes(w));
+            document.getElementById("leverInfo").textContent = "使えるおもり: " + (free.length ? free.join(" ") : "なし") + "(右の■を押すと、おもりを置く・変える)";
+            document.getElementById("leverStatus").textContent = "左の回す力 " + left + " : 右の回す力 " + right + (left === right ? "  釣り合った！" : (left > right ? "  左に傾いている" : "  右に傾いている"));
+            const angle = Math.max(-6,Math.min(6,(left - right)*0.8));
+            leverBeam.style.transform = "rotate(" + (-angle) + "deg)";   // 左が重いと左が下がる
+        };
+
+        const openLever = () => {
+            if (gameData.lever) {
+                return;
+            };
+            gameData.lever = true;
+            gameData.frozen = true;
+            leverPanel.hidden = false;
+            updateLever();
+        };
+
+        const closeLever = () => {
+            gameData.lever = false;
+            gameData.frozen = false;
+            leverPanel.hidden = true;
+        };
+
+        // 右の枠を押すたびに、まだ使っていないおもりを順に置く(最後は何も置かない)
+        const clickLeverSlot = (index) => {
+            if (!gameData.lever) {
+                return;
+            };
+            const current = lever.right[index];
+            const next = leverWeights.find((w) => w > current && !lever.right.includes(w));
+            lever.right[index] = next || 0;
+            sound.note(index);
+            updateLever();
+
+            clearTimeout(lever.timer);
+            if (leverLeftTorque() === leverRightTorque()) {
+                lever.timer = setTimeout(() => {
+                    // 待つ間に、また動かしていたら、何もしない
+                    if (!gameData.lever || leverLeftTorque() !== leverRightTorque()) {
+                        return;
+                    };
+                    closeLever();
+                    gameData.flags.leverSolved = true;
+                    gameData.items.nurseKey = true;
+                    updateItemHud();
+                    sound.fanfare();
+                    showMessage("てこが釣り合い、カチッと音がした。「保健室の鍵」を手に入れた。",4500);
+                },900);
+            };
+        };
+
+        for (let i = 0; i < leverSlots; i++) {
+            document.getElementById("lr" + (i + 1)).addEventListener("click",() => clickLeverSlot(i));
+        };
+        document.getElementById("leverClose").addEventListener("click",closeLever);
+        document.addEventListener("keydown",(event) => {
+            if (gameData.lever && event.key === "Escape") {
+                closeLever();
+            };
+        });
+
+        newLever();
+
+        // 第二理科室: 教卓の謎の液体Yを取ったら、普通の机の絵に変える
+        const labRoom2 = mapData[16].slice();
+
+        const syncLab2 = () => {
+            if (gameData.flags.takenLiquidY) {
+                const row = mapData[16][6];
+                mapData[16][6] = row.slice(0,11) + "3" + row.slice(12);
+            };
+        };
+
+        // 保健室: 机の謎の薬Zを取ったら、普通の机の絵に変える
+        const nurseRoom = mapData[17].slice();
+
+        const syncNurse = () => {
+            if (gameData.flags.takenMedicineZ) {
+                const row = mapData[17][5];
+                mapData[17][5] = row.slice(0,6) + "3" + row.slice(7);
+            };
+        };
+
         // 第一理科室: フラスコ・鍵の型・柔らかい金属を取ったら、普通の机・棚の絵に変える
         const labRoom = mapData[15].slice();
 
@@ -2303,6 +2762,59 @@
         };
 
         const events = {
+            // 第二理科室: 教卓のフラスコ(謎の液体Y)
+            liquidY() {
+                gameData.items.liquidY = true;
+                gameData.flags.takenLiquidY = true;
+                syncLab2();
+                updateItemHud();
+                sound.pickup();
+                showMessage("教卓の上に、青い液体が入ったフラスコがある。「謎の液体Y」を手に入れた。",3500);
+            },
+
+            // 保健室: 真ん中の机の謎の薬Z
+            medicineZ() {
+                if (gameData.items.medicineZ || gameData.items.poisonSP) {
+                    showMessage("もう何もない。");
+                    return;
+                };
+                gameData.items.medicineZ = true;
+                gameData.flags.takenMedicineZ = true;
+                syncNurse();
+                updateItemHud();
+                sound.pickup();
+                showMessage("机の上に、緑の液体が入ったフラスコがある。「謎の薬Z」を手に入れた。",3500);
+            },
+
+            // 保健室: 上の道具。X・Y・Zの3つを持っていると、強力な毒液SPができる
+            mixTools() {
+                const items = gameData.items;
+                if (items.poisonSP) {
+                    showMessage("もう用はない。薬を混ぜる道具だ。");
+                    return;
+                };
+                if (items.liquidX && items.liquidY && items.medicineZ) {
+                    delete items.liquidX;
+                    delete items.liquidY;
+                    delete items.medicineZ;
+                    items.poisonSP = true;
+                    updateItemHud();
+                    sound.pickup();
+                    showMessage("3つの液体を混ぜ合わせた。「強力な毒液SP」が完成した！",4500);
+                    return;
+                };
+                showMessage("薬を混ぜる道具だ。3つの液体が必要なようだ。");
+            },
+
+            // 第二理科室: 真ん中のてこ。釣り合わせると保健室の鍵が手に入る
+            lever() {
+                if (gameData.flags.leverSolved) {
+                    showMessage("てこは、もう釣り合っている。");
+                    return;
+                };
+                openLever();
+            },
+
             // 第一理科室: 教卓のフラスコ(謎の液体X)
             liquidX() {
                 if (gameData.items.liquidX) {
@@ -2377,6 +2889,13 @@
 
             // 正門: 先生を倒していないうちは、触れると先生が現れて脱出できない(追いかけてくる)
             gate() {
+                if (gameData.clearing) {
+                    return;
+                };
+                if (gameData.items.poisonSP) {
+                    escapeSequence();
+                    return;
+                };
                 if (chaser.active) {
                     showMessage("先生が迫ってくる……脱出できない！");
                     return;
@@ -2846,7 +3365,7 @@
         };
 
         document.addEventListener("pointerdown",(event) => {
-            if (gameData.over || gameData.piano || stick.id !== null || event.clientY < window.innerHeight/2) {
+            if (gameData.over || gameData.piano || gameData.lever || stick.id !== null || event.clientY < window.innerHeight/2) {
                 return;
             };
             stick.id = event.pointerId;
@@ -2929,6 +3448,63 @@
             return [];
         };
 
+        // 毒液SPを持って正門に触れたとき: 先生が現れるが、毒液が自動で使われて倒れ、脱出できる
+        const clearScreen = document.getElementById("clearScreen");
+        const clearAgain = document.getElementById("clearAgain");
+
+        const escapeSequence = () => {
+            const later = (func,ms) => puzzle.timers.push(setTimeout(func,ms));
+            const shake = () => {
+                canvas.classList.add("shake");
+                later(() => {
+                    canvas.classList.remove("shake");
+                },500);
+            };
+
+            gameData.clearing = true;
+            gameData.frozen = true;
+            key.up = key.down = key.left = key.right = false;
+            releaseStick();
+            delete gameData.items.poisonSP;
+            updateItemHud();
+
+            sound.sting();
+            shake();
+            showMessage("正門に手をかけた……！ 先生が現れた！");
+            if (!chaser.active) {
+                startChase(9,18,49,0.2,0.8);
+            };
+
+            later(() => {
+                sound.pickup();
+                shake();
+                showMessage("持っていた「強力な毒液SP」が、先生にふりかかった！",2500);
+            },1200);
+
+            later(() => {
+                chaser.active = false;
+                sound.caught();
+                shake();
+                showMessage("先生は、苦しみながら消えていった……",2500);
+            },2800);
+
+            later(() => {
+                sound.open();
+                showMessage("正門が、ゆっくりと開いた。",2500);
+            },5000);
+
+            later(() => {
+                messageBox.hidden = true;
+                gameData.over = true;
+                clearScreen.classList.add("show");
+                sound.clear();
+                later(() => {
+                    clearAgain.disabled = false;
+                    clearAgain.focus();
+                },2000);
+            },7000);
+        };
+
         // 暗転 → GAME OVER → againで最初から
         const gameOverScreen = document.getElementById("gameOver");
         const againButton = document.getElementById("againButton");
@@ -2988,6 +3564,11 @@
             mapData[10] = receptionRoom.slice();
             mapData[11] = musicRoom.slice();
             mapData[15] = labRoom.slice();
+            mapData[16] = labRoom2.slice();
+            mapData[17] = nurseRoom.slice();
+            clearTimeout(lever.timer);
+            closeLever();
+            newLever();
             doorData[11]["6,10"] = {message:"肖像画"};
             clearTimeout(puzzle.timer);
             puzzle.timers.forEach(clearTimeout);
@@ -2997,13 +3578,17 @@
             moveRemain = 0;
             againButton.disabled = true;
             gameOverScreen.classList.remove("show");
+            clearScreen.classList.remove("show");
+            clearAgain.disabled = true;
+            gameData.clearing = false;
             gameData.over = false;
         };
 
         againButton.addEventListener("click",restart);
+        clearAgain.addEventListener("click",restart);
 
         // 【一時的・配布前に削除】デバッグ用: F12のコンソールで warp(マップID) と入力すると、そのマップへ移動する
-        // warp(マップID, タイルx, タイルy) で位置も指定できる。ID: 1教室 2三階 3二階 4一階 5校庭 6渡り廊下 7三年下駄箱 8職員室 9外 10応接室 11音楽室 12図書室 13東校舎 14三年校舎2階 15第一理科室
+        // warp(マップID, タイルx, タイルy) で位置も指定できる。ID: 1教室 2三階 3二階 4一階 5校庭 6渡り廊下 7三年下駄箱 8職員室 9外 10応接室 11音楽室 12図書室 13東校舎 14三年校舎2階 15第一理科室 16第二理科室 17保健室
         const warpSpots = {
             1:[12,16],
             2:[4,28],
@@ -3019,7 +3604,9 @@
             12:[10,1],
             13:[3,1],
             14:[3,1],
-            15:[2,12]
+            15:[2,12],
+            16:[11,1],
+            17:[12,2]
         };
 
         const warp = (mapId,tx,ty) => {
@@ -3059,7 +3646,9 @@
             12:"図書室",
             13:"東校舎",
             14:"3年校舎2階の廊下",
-            15:"第一理科室"
+            15:"第一理科室",
+            16:"第二理科室",
+            17:"保健室"
         };
 
         const cheatPanel = document.getElementById("cheat");
@@ -3082,10 +3671,12 @@
             };
             gameData.items[id] = true;
             delete gameData.used[id];
-            const labFlags = {liquidX:"takenLiquidX",keyMold:"takenKeyMold",softMetal:"takenSoftMetal"};
+            const labFlags = {liquidX:"takenLiquidX",keyMold:"takenKeyMold",softMetal:"takenSoftMetal",liquidY:"takenLiquidY",medicineZ:"takenMedicineZ"};
             if (labFlags[id]) {
                 gameData.flags[labFlags[id]] = true;
                 syncLab();
+                syncLab2();
+                syncNurse();
             };
             Object.values(mapItems).flat().filter((item) => item.id === id).forEach((item) => {
                 item.taken = true;
@@ -3180,7 +3771,7 @@
                 checkPhone();
 
                 updateChaser(delta);
-                if (chaserVisible() && !gameData.hidden && isNear(player,chaser,0)) {
+                if (chaserVisible() && !gameData.hidden && !gameData.clearing && isNear(player,chaser,0)) {
                     startGameOver(chaser.reason);
                 };
 
