@@ -115,6 +115,7 @@
             left: 50%;
             transform: translateX(-50%);
             max-width: 90vw;
+            white-space: pre-line;
             padding: 10px 18px;
             border-radius: 8px;
             background: rgba(0, 0, 0, 0.8);
@@ -769,14 +770,68 @@
                 "IJ111y11111111JI",
                 "IJJJJJJJJJJJJJJI",
                 "IIIIIIIIIIIIIIII"
+            ],
+            27:[//bookshelf(本棚。マップ上の文字は r)
+                "eeeeeeeeeeeeeeee",
+                "erttkkbbllrrttbe",
+                "erttkk33llrrttke",
+                "erttkk33llrrttke",
+                "erttkk33llrrttke",
+                "eeeeeeeeeeeeeeee",
+                "ekbbllrrttbb33le",
+                "ek33llrrttkk33le",
+                "ek33llrrttkk33le",
+                "ek33llrrttkk33le",
+                "eeeeeeeeeeeeeeee",
+                "elrrttbb33llrrbe",
+                "elrrttkk33llrrte",
+                "elrrttkk33llrrte",
+                "elrrttkk33llrrte",
+                "eeeeeeeeeeeeeeee"
+            ],
+            28:[//counter(受付カウンター。マップ上の文字は s)
+                "eeeeeeeeeeeeeeee",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbb33bbb",
+                "bbbbbbbbbbb33bbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "bbbbbbbbbbbbbbbb",
+                "eeeeeeeeeeeeeeee",
+                "eeeeeeeeeeeeeeee",
+                "eeeeeeeeeeeeeeee",
+                "eeeeeeeeeeeeeeee",
+                "eeeeeeeeeeeeeeee",
+                "eeeeeeeeeeeeeeee"
+            ],
+            29:[//counter with book(秘伝の書が載ったカウンター。マップ上の文字は t)
+                "eeeeeeeeeeeeeeee",
+                "bbb1111111111bbb",
+                "bbb1rrrrrrrr1bbb",
+                "bbb1rrr33rrr1bbb",
+                "bbb1rrr33rrr1bbb",
+                "bbb1rrr33rrr1bbb",
+                "bbb1rrrrrrrr1bbb",
+                "bbb1000000001bbb",
+                "bbb1111111111bbb",
+                "bbbbbbbbbbbbbbbb",
+                "eeeeeeeeeeeeeeee",
+                "eeeeeeeeeeeeeeee",
+                "eeeeeeeeeeeeeeee",
+                "eeeeeeeeeeeeeeee",
+                "eeeeeeeeeeeeeeee",
+                "eeeeeeeeeeeeeeee"
             ]
         };
 
         // 通れないタイル(floor以外)
-        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14,16,17,18,19,20,22,23,24,25,26]);
+        const solidTiles = new Set([1,2,3,4,5,6,7,8,9,10,14,16,17,18,19,20,22,23,24,25,26,27,28,29]);
 
         // 触れると反応するタイル(ドア・階段)
-        const touchTiles = new Set([5,7,8,9,16,20,22,23,24,25,26]);
+        const touchTiles = new Set([5,7,8,9,16,20,22,23,24,25,26,29]);
 
         // 1行=1文字1タイルの文字列。縦横のサイズはマップごとに自由
         const mapData = {
@@ -1150,6 +1205,31 @@
                 "1000000000001",
                 "1000000000001",
                 "111111n111111"
+            ],
+            12:[//図書室(上のドア(10,0)から入る)。入口の左に受付(c4-9。c7に秘伝の書)、下に長机2つ(行5・行8)、右に本棚4段、左は壁の本棚と縦の長机、下の壁は本棚が一面
+                "1111111111511111",
+                "1r00ssstss000001",
+                "1r00000000000001",
+                "1r00000000000rr1",
+                "1r0h000000000001",
+                "1r0h0hhhhhh00rr1",
+                "1r0h000000000001",
+                "1r0h000000000rr1",
+                "1r0h0hhhhhh00001",
+                "1r0h000000000rr1",
+                "1r0h000000000001",
+                "1r00000000000001",
+                "1rrrrrrrrrrrrrr1",
+                "1111111111111111"
+            ],
+            13:[//東校舎(小さな部屋)。北の壁のドア(3,0)(4,0)から入る。床に図書室の鍵
+                "11155111",
+                "10000001",
+                "10000001",
+                "10000001",
+                "10000001",
+                "10000001",
+                "11111111"
             ]
         };
 
@@ -1215,7 +1295,7 @@
                 "7,22":{message:"ドアには鍵がかかっている……",sound:"locked"},
                 "7,34":{message:"ドアには鍵がかかっている……",sound:"locked"},
                 "7,47":{message:"ドアには鍵がかかっている……",sound:"locked"},
-                "10,49":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "10,49":{requires:"libraryKey",message:"鍵を開けて、図書室に入った。",sound:"open",toMap:12,x:160,y:16},
                 "13,27":{message:"階段を上がった。(2階)",toMap:3,x:64,y:448,show:"teacher"},
                 "13,26":{message:"階段を上がった。(2階)",toMap:3,x:64,y:448,show:"teacher"},
                 "13,2":{message:"階段を上がった。(2階)",toMap:3,x:64,y:48},
@@ -1267,8 +1347,8 @@
                 "15,41":{message:"職員玄関に入った。",sound:"open",toMap:7,x:16,y:704},
                 "17,46":{message:"3年校舎に入った。",sound:"open",toMap:7,x:160,y:944},
                 "18,46":{message:"3年校舎に入った。",sound:"open",toMap:7,x:160,y:944},
-                "17,52":{message:"ドアには鍵がかかっている……",sound:"locked"},
-                "18,52":{message:"ドアには鍵がかかっている……",sound:"locked"},
+                "17,52":{requires:"eastKey",message:"鍵を開けて、東校舎に入った。",sound:"open",toMap:13,x:48,y:16},
+                "18,52":{requires:"eastKey",message:"鍵を開けて、東校舎に入った。",sound:"open",toMap:13,x:64,y:16},
                 "21,47":{message:"正門"},
                 "21,48":{message:"正門"},
                 "21,49":{message:"正門"},
@@ -1285,6 +1365,14 @@
                 "11,4":{event:"piano"},
                 "11,5":{event:"piano"},
                 "6,10":{message:"肖像画"}
+            },
+            12:{//図書室
+                "10,0":{message:"廊下に戻った。",sound:"open",toMap:4,x:160,y:768},
+                "7,1":{event:"secretBook"}
+            },
+            13:{//東校舎
+                "3,0":{message:"外に出た。",sound:"open",toMap:9,x:272,y:816},
+                "4,0":{message:"外に出た。",sound:"open",toMap:9,x:288,y:816}
             }
         };
 
@@ -1382,6 +1470,8 @@
             receptionKey:{name:"応接室の鍵"},
             musicKey:{name:"音楽室の鍵"},
             eastKey:{name:"東校舎の鍵"},
+            libraryKey:{name:"図書室の鍵"},
+            secretBook:{name:"秘伝の書"},
             mysteryPaper:{name:() => "謎の紙(" + puzzle.melody.map((i) => noteNames[i]).join(",") + ")"}
         };
 
@@ -1408,7 +1498,12 @@
 
         const eastKeyTex = keyTex.map((row) => row.replace(/3/g,"r"));   // 赤い鍵
 
+        const libraryKeyTex = keyTex.map((row) => row.replace(/3/g,"k"));   // 緑の鍵
+
         const mapItems = {
+            13:[//東校舎: ギミックなしで、床に置いてある
+                {id:"libraryKey",taken:false,x:64,y:48,w:16,h:16,tex:libraryKeyTex}
+            ],
             11:[//音楽室: ピアノの正解のとき中央に現れ、少しして自動で回収される
                 {id:"eastKey",showFlag:"eastKeyShown",auto:true,taken:false,x:96,y:80,w:16,h:16,tex:eastKeyTex}
             ],
@@ -1921,7 +2016,24 @@
         const hideTime = 3000;
         let hideTimer = null;
 
+        // 図書室のカウンターの上の秘伝の書。何度でも読み返せる
+        const secretBookText = [
+            "第一理科室で「謎の液体X」、第二理科室で「謎の液体Y」を手に入れる。",
+            "保健室で「謎の薬Z」とまぜ合わせた薬を、先生にかければ、先生を倒せる。",
+            "倒したら、正門から脱出だ。"
+        ].join("\n");
+
         const events = {
+            secretBook() {
+                const first = !gameData.items.secretBook;
+                gameData.items.secretBook = true;
+                updateItemHud();
+                if (first) {
+                    sound.pickup();
+                };
+                showMessage((first ? "秘伝の書を手に入れた。" : "秘伝の書を読み返した。") + "\n" + secretBookText,14000);
+            },
+
             // 目印の下駄箱: メモにメロディが書いてある
             hintLocker() {
                 if (gameData.items.mysteryPaper) {
@@ -2524,7 +2636,7 @@
         againButton.addEventListener("click",restart);
 
         // 【一時的・配布前に削除】デバッグ用: F12のコンソールで warp(マップID) と入力すると、そのマップへ移動する
-        // warp(マップID, タイルx, タイルy) で位置も指定できる。ID: 1教室 2三階 3二階 4一階 5校庭 6渡り廊下 7三年下駄箱 8職員室 9外 10応接室 11音楽室
+        // warp(マップID, タイルx, タイルy) で位置も指定できる。ID: 1教室 2三階 3二階 4一階 5校庭 6渡り廊下 7三年下駄箱 8職員室 9外 10応接室 11音楽室 12図書室 13東校舎
         const warpSpots = {
             1:[12,16],
             2:[4,28],
@@ -2536,7 +2648,9 @@
             8:[12,16],
             9:[5,2],
             10:[12,2],
-            11:[6,1]
+            11:[6,1],
+            12:[10,1],
+            13:[3,1]
         };
 
         const warp = (mapId,tx,ty) => {
